@@ -1,0 +1,385 @@
+let data = JSON.parse(localStorage.getItem('aled-data')) || {
+  leagues: []
+};
+
+let currentLeagueId = null;
+
+function saveData() {
+  localStorage.setItem('aled-data', JSON.stringify(data));
+}
+
+const leaguesSection = document.getElementById('leagues-section');
+const leaguesList = document.getElementById('leagues-list');
+const leagueForm = document.getElementById('league-form');
+const leagueNameInput = document.getElementById('league-name');
+const leaguePromotionInput = document.getElementById('league-promotion');
+const leagueRelegationInput = document.getElementById('league-relegation');
+
+const leagueView = document.getElementById('league-view');
+const leagueTitle = document.getElementById('league-title');
+const backToLeaguesBtn = document.getElementById('back-to-leagues');
+
+const playerForm = document.getElementById('player-form');
+const playerNameInput = document.getElementById('player-name');
+const playersList = document.getElementById('players-list');
+
+const tableBody = document.getElementById('table-body');
+
+const matchForm = document.getElementById('match-form');
+const matchPlayerASelect = document.getElementById('match-player-a');
+const matchPlayerBSelect = document.getElementById('match-player-b');
+const scoreAInput = document.getElementById('score-a');
+const scoreBInput = document.getElementById('score-b');
+const matchCancelledCheckbox = document.getElementById('match-cancelled');
+const statsBlocks = document.getElementById('stats-blocks');
+const cancelReasonInput = document.getElementById('cancel-reason');
+
+const avgAInput = document.getElementById('avg-a');
+const bestLegAInput = document.getElementById('best-leg-a');
+const bestCheckoutAInput = document.getElementById('best-checkout-a');
+const highestScoreAInput = document.getElementById('highest-score-a');
+const maxesAInput = document.getElementById('maxes-a');
+
+const avgBInput = document.getElementById('avg-b');
+const bestLegBInput = document.getElementById('best-leg-b');
+const bestCheckoutBInput = document.getElementById('best-checkout-b');
+const highestScoreBInput = document.getElementById('highest-score-b');
+const maxesBInput = document.getElementById('maxes-b');
+
+const matchesList = document.getElementById('matches-list');
+
+function getLeagueById(id) {
+  return data.leagues.find(l => l.id === id);
+}
+
+function renderLeagues() {
+  leaguesList.innerHTML = '';
+  data.leagues.forEach(league => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.textContent = league.name;
+    btn.addEventListener('click', () => openLeague(league.id));
+    li.appendChild(btn);
+    leaguesList.appendChild(li);
+  });
+}
+
+function openLeague(id) {
+  currentLeagueId = id;
+  const league = getLeagueById(id);
+  leagueTitle.textContent = league.name;
+  leaguesSection.classList.add('hidden');
+  leagueView.classList.remove('hidden');
+  renderPlayers();
+  renderMatchPlayersSelects();
+  renderTable();
+  renderMatches();
+}
+
+backToLeaguesBtn.addEventListener('click', () => {
+  currentLeagueId = null;
+  leagueView.classList.add('hidden');
+  leaguesSection.classList.remove('hidden');
+});
+
+leagueForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const name = leagueNameInput.value.trim();
+  if (!name) return;
+  const promotion = parseInt(leaguePromotionInput.value) || 0;
+  const relegation = parseInt(leagueRelegationInput.value) || 0;
+
+  const id = 'league-' + Date.now();
+
+  data.leagues.push({
+    id,
+    name,
+    promotionSpots: promotion,
+    relegationSpots: relegation,
+    players: [],
+    matches: []
+  });
+
+  leagueNameInput.value = '';
+  leaguePromotionInput.value = 0;
+  leagueRelegationInput.value = 0;
+
+  saveData();
+  renderLeagues();
+});
+
+playerForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const name = playerNameInput.value.trim();
+  if (!name || !currentLeagueId) return;
+  const league = getLeagueById(currentLeagueId);
+  league.players.push({
+    id: 'p-' + Date.now() + '-' + league.players.length,
+    name
+  });
+  playerNameInput.value = '';
+  saveData();
+  renderPlayers();
+  renderMatchPlayersSelects();
+  renderTable();
+});
+
+function renderPlayers() {
+  playersList.innerHTML = '';
+  const league = getLeagueById(currentLeagueId);
+  league.players.forEach(p => {
+    const li = document.createElement('li');
+    li.textContent = p.name;
+    playersList.appendChild(li);
+  });
+}
+
+function renderMatchPlayersSelects() {
+  const league = getLeagueById(currentLeagueId);
+  matchPlayerASelect.innerHTML = '<option value="">Zawodnik A</option>';
+  matchPlayerBSelect.innerHTML = '<option value="">Zawodnik B</option>';
+  league.players.forEach(p => {
+    const optA = document.createElement('option');
+    optA.value = p.id;
+    optA.textContent = p.name;
+    matchPlayerASelect.appendChild(optA);
+
+    const optB = document.createElement('option');
+    optB.value = p.id;
+    optB.textContent = p.name;
+    matchPlayerBSelect.appendChild(optB);
+  });
+}
+
+matchCancelledCheckbox.addEventListener('change', () => {
+  const cancelled = matchCancelledCheckbox.checked;
+  statsBlocks.style.display = cancelled ? 'none' : 'grid';
+});
+
+matchForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const league = getLeagueById(currentLeagueId);
+  if (!league) return;
+
+  const playerAId = matchPlayerASelect.value;
+  const playerBId = matchPlayerBSelect.value;
+  if (!playerAId || !playerBId || playerAId === playerBId) return;
+
+  const cancelled = matchCancelledCheckbox.checked;
+
+  let scoreA = 0;
+  let scoreB = 0;
+  let statsA = null;
+  let statsB = null;
+
+  if (!cancelled) {
+    scoreA = parseInt(scoreAInput.value) || 0;
+    scoreB = parseInt(scoreBInput.value) || 0;
+
+    statsA = {
+      avg: parseFloat(avgAInput.value) || 0,
+      bestLeg: parseInt(bestLegAInput.value) || null,
+      bestCheckout: parseInt(bestCheckoutAInput.value) || null,
+      highestScore: parseInt(highestScoreAInput.value) || null,
+      maxes: parseInt(maxesAInput.value) || 0
+    };
+
+    statsB = {
+      avg: parseFloat(avgBInput.value) || 0,
+      bestLeg: parseInt(bestLegBInput.value) || null,
+      bestCheckout: parseInt(bestCheckoutBInput.value) || null,
+      highestScore: parseInt(highestScoreBInput.value) || null,
+      maxes: parseInt(maxesBInput.value) || 0
+    };
+  }
+
+  const match = {
+    id: 'm-' + Date.now(),
+    playerAId,
+    playerBId,
+    scoreA,
+    scoreB,
+    cancelled,
+    reason: cancelled ? cancelReasonInput.value.trim() : '',
+    statsA,
+    statsB,
+    timestamp: new Date().toISOString()
+  };
+
+  league.matches.push(match);
+
+  scoreAInput.value = '';
+  scoreBInput.value = '';
+  avgAInput.value = '';
+  bestLegAInput.value = '';
+  bestCheckoutAInput.value = '';
+  highestScoreAInput.value = '';
+  maxesAInput.value = 0;
+  avgBInput.value = '';
+  bestLegBInput.value = '';
+  bestCheckoutBInput.value = '';
+  highestScoreBInput.value = '';
+  maxesBInput.value = 0;
+  matchCancelledCheckbox.checked = false;
+  cancelReasonInput.value = '';
+  statsBlocks.style.display = 'grid';
+
+  saveData();
+  renderTable();
+  renderMatches();
+});
+
+function calculateLeagueStats(league) {
+  const statsByPlayer = {};
+  league.players.forEach(p => {
+    statsByPlayer[p.id] = {
+      player: p,
+      matches: 0,
+      wins: 0,
+      losses: 0,
+      legsFor: 0,
+      legsAgainst: 0,
+      points: 0,
+      avgSum: 0,
+      avgCount: 0,
+      maxes: 0,
+      cancelled: 0
+    };
+  });
+
+  league.matches.forEach(m => {
+    const a = statsByPlayer[m.playerAId];
+    const b = statsByPlayer[m.playerBId];
+    if (!a || !b) return;
+
+    if (m.cancelled) {
+      a.cancelled++;
+      b.cancelled++;
+      return;
+    }
+
+    a.matches++;
+    b.matches++;
+
+    a.legsFor += m.scoreA;
+    a.legsAgainst += m.scoreB;
+    b.legsFor += m.scoreB;
+    b.legsAgainst += m.scoreA;
+
+    if (m.scoreA > m.scoreB) {
+      a.wins++;
+      b.losses++;
+      a.points += 2;
+    } else if (m.scoreB > m.scoreA) {
+      b.wins++;
+      a.losses++;
+      b.points += 2;
+    } else {
+      a.points += 1;
+      b.points += 1;
+    }
+
+    if (m.statsA) {
+      if (m.statsA.avg > 0) {
+        a.avgSum += m.statsA.avg;
+        a.avgCount++;
+      }
+      a.maxes += m.statsA.maxes || 0;
+    }
+
+    if (m.statsB) {
+      if (m.statsB.avg > 0) {
+        b.avgSum += m.statsB.avg;
+        b.avgCount++;
+      }
+      b.maxes += m.statsB.maxes || 0;
+    }
+  });
+
+  const rows = Object.values(statsByPlayer).map(s => {
+    const avg = s.avgCount > 0 ? s.avgSum / s.avgCount : 0;
+    return {
+      ...s,
+      avg
+    };
+  });
+
+  rows.sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    const diffA = a.legsFor - a.legsAgainst;
+    const diffB = b.legsFor - b.legsAgainst;
+    if (diffB !== diffA) return diffB - diffA;
+    return b.avg - a.avg;
+  });
+
+  return rows;
+}
+
+function renderTable() {
+  tableBody.innerHTML = '';
+  const league = getLeagueById(currentLeagueId);
+  if (!league) return;
+
+  const rows = calculateLeagueStats(league);
+  const promotion = league.promotionSpots || 0;
+  const relegation = league.relegationSpots || 0;
+
+  rows.forEach((row, index) => {
+    const tr = document.createElement('tr');
+
+    if (promotion > 0 && index < promotion) {
+      tr.classList.add('awans');
+    }
+    if (relegation > 0 && index >= rows.length - relegation) {
+      tr.classList.add('spadek');
+    }
+
+    const cancelledCount = row.cancelled || 0;
+    const legsDiff = row.legsFor - row.legsAgainst;
+
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${row.player.name}</td>
+      <td>${row.matches}</td>
+      <td>${row.wins}</td>
+      <td>${row.losses}</td>
+      <td>${row.legsFor} / ${row.legsAgainst} (${legsDiff >= 0 ? '+' : ''}${legsDiff})</td>
+      <td>${row.points}</td>
+      <td>${row.avg.toFixed(2)}</td>
+      <td>${row.maxes}</td>
+      <td>${cancelledCount}</td>
+    `;
+    tableBody.appendChild(tr);
+  });
+}
+
+function renderMatches() {
+  matchesList.innerHTML = '';
+  const league = getLeagueById(currentLeagueId);
+  if (!league) return;
+
+  const playersMap = {};
+  league.players.forEach(p => {
+    playersMap[p.id] = p.name;
+  });
+
+  league.matches
+    .slice()
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    .forEach(m => {
+      const li = document.createElement('li');
+      const nameA = playersMap[m.playerAId] || '???';
+      const nameB = playersMap[m.playerBId] || '???';
+
+      if (m.cancelled) {
+        li.classList.add('anulowany');
+        li.textContent = `${nameA} vs ${nameB} – MECZ ANULOWANY${m.reason ? ' (' + m.reason + ')' : ''}`;
+      } else {
+        li.textContent = `${nameA} ${m.scoreA} : ${m.scoreB} ${nameB}`;
+      }
+
+      matchesList.appendChild(li);
+    });
+}
+
+renderLeagues();
