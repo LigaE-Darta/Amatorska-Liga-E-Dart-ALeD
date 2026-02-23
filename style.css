@@ -71,12 +71,18 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  table-layout: fixed;
 }
 
 th, td {
   border-bottom: 1px solid #1f2937;
   padding: 6px 4px;
   text-align: left;
+}
+th, td {
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 tr.awans {
@@ -109,3 +115,15 @@ legend {
     width: 100%;
   }
 }
+/* Szerokości kolumn tabeli */
+th:nth-child(1), td:nth-child(1) { width: 40px; }   /* Miejsce */
+th:nth-child(2), td:nth-child(2) { width: 150px; }  /* Zawodnik */
+th:nth-child(3), td:nth-child(3) { width: 60px; }   /* Mecze */
+th:nth-child(4), td:nth-child(4) { width: 40px; }   /* W */
+th:nth-child(5), td:nth-child(5) { width: 40px; }   /* R */
+th:nth-child(6), td:nth-child(6) { width: 40px; }   /* P */
+th:nth-child(7), td:nth-child(7) { width: 120px; }  /* Legi */
+th:nth-child(8), td:nth-child(8) { width: 60px; }   /* Punkty */
+th:nth-child(9), td:nth-child(9) { width: 80px; }   /* Średnia */
+th:nth-child(10), td:nth-child(10) { width: 60px; } /* Maxy */
+th:nth-child(11), td:nth-child(11) { width: 40px; } /* A (anulowane) */
