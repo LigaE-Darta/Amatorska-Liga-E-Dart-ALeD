@@ -74,6 +74,7 @@ function openLeague(id) {
   renderMatchPlayersSelects();
   renderTable();
   renderMatches();
+  renderSeasonStats();
 }
 
 backToLeaguesBtn.addEventListener('click', () => {
@@ -227,6 +228,7 @@ matchForm.addEventListener('submit', e => {
   saveData();
   renderTable();
   renderMatches();
+  renderSeasonStats();
 });
 
 function calculateLeagueStats(league) {
@@ -314,7 +316,43 @@ function calculateLeagueStats(league) {
     if (diffB !== diffA) return diffB - diffA;
     return b.avg - a.avg;
   });
+// Statystyki PRO sezonu
+let highestCheckout = 0;
+let shortestLeg = null;
+let highestScore = 0;
+let highestAvg = 0;
+let mostMaxes = 0;
 
+league.matches.forEach(m => {
+  if (m.cancelled) return;
+
+  if (m.statsA) {
+    if (m.statsA.bestCheckout > highestCheckout) highestCheckout = m.statsA.bestCheckout;
+    if (m.statsA.bestLeg && (!shortestLeg || m.statsA.bestLeg < shortestLeg)) shortestLeg = m.statsA.bestLeg;
+    if (m.statsA.highestScore > highestScore) highestScore = m.statsA.highestScore;
+    if (m.statsA.avg > highestAvg) highestAvg = m.statsA.avg;
+    if (m.statsA.maxes > mostMaxes) mostMaxes = m.statsA.maxes;
+  }
+
+  if (m.statsB) {
+    if (m.statsB.bestCheckout > highestCheckout) highestCheckout = m.statsB.bestCheckout;
+    if (m.statsB.bestLeg && (!shortestLeg || m.statsB.bestLeg < shortestLeg)) shortestLeg = m.statsB.bestLeg;
+    if (m.statsB.highestScore > highestScore) highestScore = m.statsB.highestScore;
+    if (m.statsB.avg > highestAvg) highestAvg = m.statsB.avg;
+    if (m.statsB.maxes > mostMaxes) mostMaxes = m.statsB.maxes;
+  }
+});
+
+// Zapisujemy statystyki PRO do obiektu league
+league.seasonStats = {
+  highestCheckout,
+  shortestLeg,
+  highestScore,
+  highestAvg,
+  mostMaxes,
+  bestPlayerByPoints: rows[0]?.player.name || "",
+  bestPlayerByAvg: rows.sort((a, b) => b.avg - a.avg)[0]?.player.name || ""
+};
   return rows;
 }
 
@@ -385,5 +423,19 @@ function renderMatches() {
       matchesList.appendChild(li);
     });
 }
+function renderSeasonStats() {
+  const league = getLeagueById(currentLeagueId);
+  const stats = league.seasonStats;
+  const list = document.getElementById('season-stats');
 
+  list.innerHTML = `
+    <li><strong>Najwyższy checkout:</strong> ${stats.highestCheckout || "—"}</li>
+    <li><strong>Najkrótszy leg:</strong> ${stats.shortestLeg || "—"} lotek</li>
+    <li><strong>Najwyższy wynik:</strong> ${stats.highestScore || "—"}</li>
+    <li><strong>Najwyższa średnia w meczu:</strong> ${stats.highestAvg?.toFixed(2) || "—"}</li>
+    <li><strong>Najwięcej maksów (180):</strong> ${stats.mostMaxes || "—"}</li>
+    <li><strong>Najlepszy zawodnik (punkty):</strong> ${stats.bestPlayerByPoints || "—"}</li>
+    <li><strong>Najlepszy zawodnik (średnia):</strong> ${stats.bestPlayerByAvg || "—"}</li>
+  `;
+}
 renderLeagues();
