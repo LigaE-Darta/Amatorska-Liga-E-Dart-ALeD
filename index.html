@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Amatorska Liga e-Darta - ALeD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Amatorska Liga e-Darta (ALeD)</h1>
+  </header>
+
+  <main>
+    <!-- STRONA GŁÓWNA: LISTA LIG -->
+    <section id="leagues-section">
+      <h2>Ligi i sezony</h2>
+      <ul id="leagues-list"></ul>
+
+      <h3>Dodaj nową ligę</h3>
+      <form id="league-form">
+        <input type="text" id="league-name" placeholder="Nazwa ligi / sezonu" required>
+        <label>
+          Miejsca awansujące:
+          <input type="number" id="league-promotion" min="0" value="0">
+        </label>
+        <label>
+          Miejsca spadkowe:
+          <input type="number" id="league-relegation" min="0" value="0">
+        </label>
+        <button type="submit">Dodaj ligę</button>
+      </form>
+    </section>
+
+    <!-- WIDOK LIGI -->
+    <section id="league-view" class="hidden">
+      <button id="back-to-leagues">&larr; Powrót do listy lig</button>
+      <h2 id="league-title"></h2>
+
+      <!-- ZAWODNICY -->
+      <section>
+        <h3>Zawodnicy</h3>
+        <form id="player-form">
+          <input type="text" id="player-name" placeholder="Imię / nick zawodnika" required>
+          <button type="submit">Dodaj zawodnika</button>
+        </form>
+        <ul id="players-list"></ul>
+      </section>
+
+      <!-- TABELA LIGI -->
+      <section>
+        <h3>Tabela ligi</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>M</th>
+              <th>Zawodnik</th>
+              <th>Mecze</th>
+              <th>W</th>
+              <th>P</th>
+              <th>Legi + / -</th>
+              <th>Punkty</th>
+              <th>Śr. 3-lotek</th>
+              <th>Maxy</th>
+              <th>A</th> <!-- anulowane -->
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </section>
+
+      <!-- DODAWANIE MECZU -->
+      <section>
+        <h3>Dodaj mecz</h3>
+        <form id="match-form">
+          <div>
+            <label>Zawodnik A:
+              <select id="match-player-a" required></select>
+            </label>
+            <label>Zawodnik B:
+              <select id="match-player-b" required></select>
+            </label>
+          </div>
+
+          <div>
+            <label>Legi A:
+              <input type="number" id="score-a" min="0" required>
+            </label>
+            <label>Legi B:
+              <input type="number" id="score-b" min="0" required>
+            </label>
+          </div>
+
+          <label>
+            <input type="checkbox" id="match-cancelled">
+            Mecz anulowany / nieodbyty
+          </label>
+
+          <div id="stats-blocks">
+            <fieldset>
+              <legend>Zawodnik A - statystyki meczu</legend>
+              <label>Średnia 3-lotek:
+                <input type="number" id="avg-a" step="0.01" min="0">
+              </label>
+              <label>Najlepszy leg (liczba lotek):
+                <input type="number" id="best-leg-a" min="0">
+              </label>
+              <label>Najlepszy checkout:
+                <input type="number" id="best-checkout-a" min="0">
+              </label>
+              <label>Najwyższy wynik:
+                <input type="number" id="highest-score-a" min="0">
+              </label>
+              <label>Liczba maksów (180):
+                <input type="number" id="maxes-a" min="0" value="0">
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Zawodnik B - statystyki meczu</legend>
+              <label>Średnia 3-lotek:
+                <input type="number" id="avg-b" step="0.01" min="0">
+              </label>
+              <label>Najlepszy leg (liczba lotek):
+                <input type="number" id="best-leg-b" min="0">
+              </label>
+              <label>Najlepszy checkout:
+                <input type="number" id="best-checkout-b" min="0">
+              </label>
+              <label>Najwyższy wynik:
+                <input type="number" id="highest-score-b" min="0">
+              </label>
+              <label>Liczba maksów (180):
+                <input type="number" id="maxes-b" min="0" value="0">
+              </label>
+            </fieldset>
+          </div>
+
+          <label>Powód anulowania (opcjonalnie):
+            <input type="text" id="cancel-reason" placeholder="np. brak stawienia się">
+          </label>
+
+          <button type="submit">Zapisz mecz</button>
+        </form>
+      </section>
+
+      <!-- HISTORIA MECZÓW -->
+      <section>
+        <h3>Historia meczów</h3>
+        <ul id="matches-list"></ul>
+      </section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
