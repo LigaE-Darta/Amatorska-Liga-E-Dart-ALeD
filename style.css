@@ -127,3 +127,18 @@ th:nth-child(8), td:nth-child(8) { width: 60px; }   /* Punkty */
 th:nth-child(9), td:nth-child(9) { width: 80px; }   /* Średnia */
 th:nth-child(10), td:nth-child(10) { width: 60px; } /* Maxy */
 th:nth-child(11), td:nth-child(11) { width: 40px; } /* A (anulowane) */
+.aled-watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background-image: url('logo.png'); /* albo logo.jpg jeśli takie wrzuciłaś */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
+}
