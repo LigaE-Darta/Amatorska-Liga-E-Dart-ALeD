@@ -345,6 +345,7 @@ function renderTable() {
       <td>${row.player.name}</td>
       <td>${row.matches}</td>
       <td>${row.wins}</td>
+      <td>${row.draws}</td>
       <td>${row.losses}</td>
       <td>${row.legsFor} / ${row.legsAgainst} (${legsDiff >= 0 ? '+' : ''}${legsDiff})</td>
       <td>${row.points}</td>
