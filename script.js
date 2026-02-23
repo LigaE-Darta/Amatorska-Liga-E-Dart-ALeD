@@ -236,6 +236,7 @@ function calculateLeagueStats(league) {
       player: p,
       matches: 0,
       wins: 0,
+      draws: 0,
       losses: 0,
       legsFor: 0,
       legsAgainst: 0,
@@ -266,18 +267,20 @@ function calculateLeagueStats(league) {
     b.legsFor += m.scoreB;
     b.legsAgainst += m.scoreA;
 
-    if (m.scoreA > m.scoreB) {
-      a.wins++;
-      b.losses++;
-      a.points += 2;
-    } else if (m.scoreB > m.scoreA) {
-      b.wins++;
-      a.losses++;
-      b.points += 2;
-    } else {
-      a.points += 1;
-      b.points += 1;
-    }
+   if (m.scoreA > m.scoreB) {
+  a.wins++;
+  b.losses++;
+  a.points += 3; // zwycięstwo = 3 pkt
+} else if (m.scoreB > m.scoreA) {
+  b.wins++;
+  a.losses++;
+  b.points += 3; // zwycięstwo = 3 pkt
+} else {
+  a.draws++;
+  b.draws++;
+  a.points += 1; // remis = 1 pkt
+  b.points += 1; // remis = 1 pkt
+}
 
     if (m.statsA) {
       if (m.statsA.avg > 0) {
