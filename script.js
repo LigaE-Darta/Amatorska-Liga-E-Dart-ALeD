@@ -308,14 +308,28 @@ function calculateLeagueStats(league) {
       avg
     };
   });
+rows.sort((a, b) => {
+  // 1. Punkty
+  if (b.points !== a.points) return b.points - a.points;
 
-  rows.sort((a, b) => {
-    if (b.points !== a.points) return b.points - a.points;
-    const diffA = a.legsFor - a.legsAgainst;
-    const diffB = b.legsFor - b.legsAgainst;
-    if (diffB !== diffA) return diffB - diffA;
-    return b.avg - a.avg;
-  });
+  // 2. Różnica legów
+  const diffA = a.legsFor - a.legsAgainst;
+  const diffB = b.legsFor - b.legsAgainst;
+  if (diffB !== diffA) return diffB - diffA;
+
+  // 3. Wygrane mecze
+  if (b.wins !== a.wins) return b.wins - a.wins;
+
+  // 4. Przegrane mecze (mniej = lepiej)
+  if (a.losses !== b.losses) return a.losses - b.losses;
+
+  // 5. Mecze bezpośrednie
+  const direct = compareHeadToHead(a.player.id, b.player.id, league.matches);
+  if (direct !== 0) return direct;
+
+  return 0;
+});
+ 
 // Statystyki PRO sezonu
 let highestCheckout = 0;
 let shortestLeg = null;
@@ -355,7 +369,33 @@ league.seasonStats = {
 };
   return rows;
 }
+function compareHeadToHead(playerAId, playerBId, matches) {
+  let aWins = 0;
+  let bWins = 0;
 
+  matches.forEach(m => {
+    if (m.cancelled) return;
+
+    const isA = m.playerAId === playerAId && m.playerBId === playerBId;
+    const isB = m.playerAId === playerBId && m.playerBId === playerAId;
+
+    if (!isA && !isB) return;
+
+    if (isA) {
+      if (m.scoreA > m.scoreB) aWins++;
+      if (m.scoreB > m.scoreA) bWins++;
+    }
+
+    if (isB) {
+      if (m.scoreB > m.scoreA) aWins++;
+      if (m.scoreA > m.scoreB) bWins++;
+    }
+  });
+
+  if (aWins > bWins) return -1; // A wyżej
+  if (bWins > aWins) return 1;  // B wyżej
+  return 0; // remis
+}
 function renderTable() {
   tableBody.innerHTML = '';
   const league = getLeagueById(currentLeagueId);
