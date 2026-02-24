@@ -230,8 +230,8 @@ matchForm.addEventListener('submit', e => {
   renderMatches();
   renderSeasonStats();
 });
-
 function calculateLeagueStats(league) {
+
   const statsByPlayer = {};
   league.players.forEach(p => {
     statsByPlayer[p.id] = {
@@ -250,6 +250,11 @@ function calculateLeagueStats(league) {
     };
   });
 
+  // MAPA ZAWODNIKÓW (MUSI BYĆ TUTAJ, POZA PĘTLĄ)
+  const playersMap = {};
+  league.players.forEach(p => playersMap[p.id] = p.name);
+
+  // PRZELICZANIE MECZÓW
   league.matches.forEach(m => {
     const a = statsByPlayer[m.playerAId];
     const b = statsByPlayer[m.playerBId];
@@ -269,20 +274,20 @@ function calculateLeagueStats(league) {
     b.legsFor += m.scoreB;
     b.legsAgainst += m.scoreA;
 
-   if (m.scoreA > m.scoreB) {
-  a.wins++;
-  b.losses++;
-  a.points += 3; // zwycięstwo = 3 pkt
-} else if (m.scoreB > m.scoreA) {
-  b.wins++;
-  a.losses++;
-  b.points += 3; // zwycięstwo = 3 pkt
-} else {
-  a.draws++;
-  b.draws++;
-  a.points += 1; // remis = 1 pkt
-  b.points += 1; // remis = 1 pkt
-}
+    if (m.scoreA > m.scoreB) {
+      a.wins++;
+      b.losses++;
+      a.points += 3;
+    } else if (m.scoreB > m.scoreA) {
+      b.wins++;
+      a.losses++;
+      b.points += 3;
+    } else {
+      a.draws++;
+      b.draws++;
+      a.points++;
+      b.points++;
+    }
 
     if (m.statsA) {
       if (m.statsA.avg > 0) {
@@ -301,127 +306,106 @@ function calculateLeagueStats(league) {
     }
   });
 
-  const rows = Object.values(statsByPlayer).map(s => {
-    const avg = s.avgCount > 0 ? s.avgSum / s.avgCount : 0;
-    return {
-      ...s,
-      avg
-    };
+  // TWORZENIE WIERSZY
+  const rows = Object.values(statsByPlayer).map(s => ({
+    ...s,
+    avg: s.avgCount > 0 ? s.avgSum / s.avgCount : 0
+  }));
+
+  // SORTOWANIE LIGOWE
+  rows.sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+
+    const diffA = a.legsFor - a.legsAgainst;
+    const diffB = b.legsFor - b.legsAgainst;
+    if (diffB !== diffA) return diffB - diffA;
+
+    if (b.wins !== a.wins) return b.wins - a.wins;
+
+    if (a.losses !== b.losses) return a.losses - b.losses;
+
+    const direct = compareHeadToHead(a.player.id, b.player.id, league.matches);
+    if (direct !== 0) return direct;
+
+    return 0;
   });
-rows.sort((a, b) => {
-  // 1. Punkty
-  if (b.points !== a.points) return b.points - a.points;
 
-  // 2. Różnica legów
-  const diffA = a.legsFor - a.legsAgainst;
-  const diffB = b.legsFor - b.legsAgainst;
-  if (diffB !== diffA) return diffB - diffA;
+  // STATYSTYKI SEZONU
+  let highestCheckout = 0, highestCheckoutPlayer = "";
+  let shortestLeg = null, shortestLegPlayer = "";
+  let highestScore = 0, highestScorePlayer = "";
+  let highestAvg = 0, highestAvgPlayer = "";
+  let mostMaxes = 0, mostMaxesPlayer = "";
 
-  // 3. Wygrane mecze
-  if (b.wins !== a.wins) return b.wins - a.wins;
+  league.matches.forEach(m => {
+    if (m.cancelled) return;
 
-  // 4. Przegrane mecze (mniej = lepiej)
-  if (a.losses !== b.losses) return a.losses - b.losses;
-
-  // 5. Mecze bezpośrednie
-  const direct = compareHeadToHead(a.player.id, b.player.id, league.matches);
-  if (direct !== 0) return direct;
-
-  return 0;
-});
- 
-// Statystyki PRO sezonu
-let highestCheckout = 0;
-let highestCheckoutPlayer = "";
-
-let shortestLeg = null;
-let shortestLegPlayer = "";
-
-let highestScore = 0;
-let highestScorePlayer = "";
-
-let highestAvg = 0;
-let highestAvgPlayer = "";
-
-let mostMaxes = 0;
-let mostMaxesPlayer = "";
-league.matches.forEach(m => {
-  const playersMap = {};
-league.players.forEach(p => playersMap[p.id] = p.name);
-  if (m.cancelled) return;
-
- if (m.statsA) {
-    if (m.statsA.bestCheckout > highestCheckout) {
+    if (m.statsA) {
+      if (m.statsA.bestCheckout > highestCheckout) {
         highestCheckout = m.statsA.bestCheckout;
         highestCheckoutPlayer = playersMap[m.playerAId];
-    }
-
-    if (m.statsA.bestLeg && (!shortestLeg || m.statsA.bestLeg < shortestLeg)) {
+      }
+      if (m.statsA.bestLeg && (!shortestLeg || m.statsA.bestLeg < shortestLeg)) {
         shortestLeg = m.statsA.bestLeg;
         shortestLegPlayer = playersMap[m.playerAId];
-    }
-
-    if (m.statsA.highestScore > highestScore) {
+      }
+      if (m.statsA.highestScore > highestScore) {
         highestScore = m.statsA.highestScore;
         highestScorePlayer = playersMap[m.playerAId];
-    }
-
-    if (m.statsA.avg > highestAvg) {
+      }
+      if (m.statsA.avg > highestAvg) {
         highestAvg = m.statsA.avg;
         highestAvgPlayer = playersMap[m.playerAId];
-    }
-
-    if (m.statsA.maxes > mostMaxes) {
+      }
+      if (m.statsA.maxes > mostMaxes) {
         mostMaxes = m.statsA.maxes;
         mostMaxesPlayer = playersMap[m.playerAId];
+      }
     }
-} 
-if (m.statsB) {
-    if (m.statsB.bestCheckout > highestCheckout) {
+
+    if (m.statsB) {
+      if (m.statsB.bestCheckout > highestCheckout) {
         highestCheckout = m.statsB.bestCheckout;
         highestCheckoutPlayer = playersMap[m.playerBId];
-    }
-
-    if (m.statsB.bestLeg && (!shortestLeg || m.statsB.bestLeg < shortestLeg)) {
+      }
+      if (m.statsB.bestLeg && (!shortestLeg || m.statsB.bestLeg < shortestLeg)) {
         shortestLeg = m.statsB.bestLeg;
         shortestLegPlayer = playersMap[m.playerBId];
-    }
-
-    if (m.statsB.highestScore > highestScore) {
+      }
+      if (m.statsB.highestScore > highestScore) {
         highestScore = m.statsB.highestScore;
         highestScorePlayer = playersMap[m.playerBId];
-    }
-
-    if (m.statsB.avg > highestAvg) {
+      }
+      if (m.statsB.avg > highestAvg) {
         highestAvg = m.statsB.avg;
         highestAvgPlayer = playersMap[m.playerBId];
-    }
-
-    if (m.statsB.maxes > mostMaxes) {
+      }
+      if (m.statsB.maxes > mostMaxes) {
         mostMaxes = m.statsB.maxes;
         mostMaxesPlayer = playersMap[m.playerBId];
+      }
     }
-}
- 
-});
+  });
 
-// Zapisujemy statystyki PRO do obiektu league
-league.seasonStats = {
-  highestCheckout,
-  highestCheckoutPlayer,
-  shortestLeg,
-  shortestLegPlayer,
-  highestScore,
-  highestScorePlayer,
-  highestAvg,
-  highestAvgPlayer,
-  mostMaxes,
-  mostMaxesPlayer,
-  bestPlayerByPoints: rows[0]?.player.name || "",
-  bestPlayerByAvg: bestByAvg
-};
+  // ZAPIS STATYSTYK
+  league.seasonStats = {
+    highestCheckout,
+    highestCheckoutPlayer,
+    shortestLeg,
+    shortestLegPlayer,
+    highestScore,
+    highestScorePlayer,
+    highestAvg,
+    highestAvgPlayer,
+    mostMaxes,
+    mostMaxesPlayer,
+    bestPlayerByPoints: rows[0]?.player.name || "",
+    bestPlayerByAvg: [...rows].sort((a, b) => b.avg - a.avg)[0]?.player.name || ""
+  };
+
   return rows;
 }
+
 function compareHeadToHead(playerAId, playerBId, matches) {
   let aWins = 0;
   let bWins = 0;
