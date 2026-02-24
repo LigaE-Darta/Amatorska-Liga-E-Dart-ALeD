@@ -332,40 +332,93 @@ rows.sort((a, b) => {
  
 // Statystyki PRO sezonu
 let highestCheckout = 0;
-let shortestLeg = null;
-let highestScore = 0;
-let highestAvg = 0;
-let mostMaxes = 0;
+let highestCheckoutPlayer = "";
 
+let shortestLeg = null;
+let shortestLegPlayer = "";
+
+let highestScore = 0;
+let highestScorePlayer = "";
+
+let highestAvg = 0;
+let highestAvgPlayer = "";
+
+let mostMaxes = 0;
+let mostMaxesPlayer = "";
 league.matches.forEach(m => {
+  const playersMap = {};
+league.players.forEach(p => playersMap[p.id] = p.name);
   if (m.cancelled) return;
 
-  if (m.statsA) {
-    if (m.statsA.bestCheckout > highestCheckout) highestCheckout = m.statsA.bestCheckout;
-    if (m.statsA.bestLeg && (!shortestLeg || m.statsA.bestLeg < shortestLeg)) shortestLeg = m.statsA.bestLeg;
-    if (m.statsA.highestScore > highestScore) highestScore = m.statsA.highestScore;
-    if (m.statsA.avg > highestAvg) highestAvg = m.statsA.avg;
-    if (m.statsA.maxes > mostMaxes) mostMaxes = m.statsA.maxes;
-  }
+ if (m.statsA) {
+    if (m.statsA.bestCheckout > highestCheckout) {
+        highestCheckout = m.statsA.bestCheckout;
+        highestCheckoutPlayer = playersMap[m.playerAId];
+    }
 
-  if (m.statsB) {
-    if (m.statsB.bestCheckout > highestCheckout) highestCheckout = m.statsB.bestCheckout;
-    if (m.statsB.bestLeg && (!shortestLeg || m.statsB.bestLeg < shortestLeg)) shortestLeg = m.statsB.bestLeg;
-    if (m.statsB.highestScore > highestScore) highestScore = m.statsB.highestScore;
-    if (m.statsB.avg > highestAvg) highestAvg = m.statsB.avg;
-    if (m.statsB.maxes > mostMaxes) mostMaxes = m.statsB.maxes;
-  }
+    if (m.statsA.bestLeg && (!shortestLeg || m.statsA.bestLeg < shortestLeg)) {
+        shortestLeg = m.statsA.bestLeg;
+        shortestLegPlayer = playersMap[m.playerAId];
+    }
+
+    if (m.statsA.highestScore > highestScore) {
+        highestScore = m.statsA.highestScore;
+        highestScorePlayer = playersMap[m.playerAId];
+    }
+
+    if (m.statsA.avg > highestAvg) {
+        highestAvg = m.statsA.avg;
+        highestAvgPlayer = playersMap[m.playerAId];
+    }
+
+    if (m.statsA.maxes > mostMaxes) {
+        mostMaxes = m.statsA.maxes;
+        mostMaxesPlayer = playersMap[m.playerAId];
+    }
+} 
+if (m.statsB) {
+    if (m.statsB.bestCheckout > highestCheckout) {
+        highestCheckout = m.statsB.bestCheckout;
+        highestCheckoutPlayer = playersMap[m.playerBId];
+    }
+
+    if (m.statsB.bestLeg && (!shortestLeg || m.statsB.bestLeg < shortestLeg)) {
+        shortestLeg = m.statsB.bestLeg;
+        shortestLegPlayer = playersMap[m.playerBId];
+    }
+
+    if (m.statsB.highestScore > highestScore) {
+        highestScore = m.statsB.highestScore;
+        highestScorePlayer = playersMap[m.playerBId];
+    }
+
+    if (m.statsB.avg > highestAvg) {
+        highestAvg = m.statsB.avg;
+        highestAvgPlayer = playersMap[m.playerBId];
+    }
+
+    if (m.statsB.maxes > mostMaxes) {
+        mostMaxes = m.statsB.maxes;
+        mostMaxesPlayer = playersMap[m.playerBId];
+    }
+}
+ 
 });
 
 // Zapisujemy statystyki PRO do obiektu league
 league.seasonStats = {
   highestCheckout,
+  highestCheckoutPlayer,
   shortestLeg,
+  shortestLegPlayer,
   highestScore,
+  highestScorePlayer,
   highestAvg,
+  highestAvgPlayer,
   mostMaxes,
+  mostMaxesPlayer,
   bestPlayerByPoints: rows[0]?.player.name || "",
-  bestPlayerByAvg: [...rows].sort((a, b) => b.avg - a.avg)[0]?.player.name || ""
+  bestPlayerByAvg: bestByAvg
 };
   return rows;
 }
@@ -469,11 +522,26 @@ function renderSeasonStats() {
   const list = document.getElementById('season-stats');
 
   list.innerHTML = `
-    <li><strong>Najwyższy checkout:</strong> ${stats.highestCheckout || "—"}</li>
-    <li><strong>Najkrótszy leg:</strong> ${stats.shortestLeg || "—"} lotek</li>
-    <li><strong>Najwyższy wynik:</strong> ${stats.highestScore || "—"}</li>
-    <li><strong>Najwyższa średnia w meczu:</strong> ${stats.highestAvg?.toFixed(2) || "—"}</li>
-    <li><strong>Najwięcej maksów (180):</strong> ${stats.mostMaxes || "—"}</li>
+    <li><strong>Najwyższy checkout:</strong> 
+  ${stats.highestCheckout || "—"} 
+  ${stats.highestCheckoutPlayer ? " – " + stats.highestCheckoutPlayer : ""}
+</li>
+    <li><strong>Najkrótszy leg:</strong> 
+  ${stats.shortestLeg || "—"} 
+  ${stats.shortestLegPlayer ? " – " + stats.shortestLegPlayer : ""}
+</li>
+    <li><strong>Najwyższy wynik:</strong> 
+  ${stats.highestScore || "—"} 
+  ${stats.highestScorePlayer ? " – " + stats.highestScorePlayer : ""}
+</li>
+    <li><strong>Najwyższa średnia w meczu:</strong> 
+  ${stats.highestAvg?.toFixed(2) || "—"} 
+  ${stats.highestAvgPlayer ? " – " + stats.highestAvgPlayer : ""}
+</li>
+    <li><strong>Najwięcej maksów (180):</strong> 
+  ${stats.mostMaxes || "—"} 
+  ${stats.mostMaxesPlayer ? " – " + stats.mostMaxesPlayer : ""}
+</li>
     <li><strong>Najlepszy zawodnik (punkty):</strong> ${stats.bestPlayerByPoints || "—"}</li>
     <li><strong>Najlepszy zawodnik (średnia):</strong> ${stats.bestPlayerByAvg || "—"}</li>
   `;
