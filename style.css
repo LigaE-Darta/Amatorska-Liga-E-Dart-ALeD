@@ -3,7 +3,31 @@ body {
   font-family: system-ui, sans-serif;
   background: #020617;
   color: #e5e7eb;
+
+  /* watermark jako tło */
+  background-image: url("Amatorska Liga e-Darta logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%;
+  background-attachment: fixed;
 }
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit;
+  background-repeat: inherit;
+  background-position: inherit;
+  background-size: inherit;
+  background-attachment: inherit;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: -1;
+}
+
 
 header {
   background: #0f172a;
