@@ -41,14 +41,14 @@ main {
   margin: 24px auto 40px;
   padding: 0 16px;
 }
-
 section {
-  background: #020617;
+  background: rgba(2, 6, 23, 0.85); /* półprzezroczyste tło */
   border: 1px solid #1f2937;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 20px;
 }
+
 
 h2, h3 {
   margin-top: 0;
