@@ -365,7 +365,7 @@ league.seasonStats = {
   highestAvg,
   mostMaxes,
   bestPlayerByPoints: rows[0]?.player.name || "",
-  bestPlayerByAvg: rows.sort((a, b) => b.avg - a.avg)[0]?.player.name || ""
+  bestPlayerByAvg: [...rows].sort((a, b) => b.avg - a.avg)[0]?.player.name || ""
 };
   return rows;
 }
