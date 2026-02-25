@@ -9,11 +9,27 @@ function loadData() {
     data = JSON.parse(saved);
   }
 }
-loadData();
-console.log("POBRANO FORMULARZ:", document.getElementById("league-form"));
+// 1. Najpierw deklaracja danych
 let data = JSON.parse(localStorage.getItem('aled-data')) || {
   leagues: []
 };
+
+// 2. Funkcje zapisu/odczytu
+function saveData() {
+  localStorage.setItem("aled-data", JSON.stringify(data));
+}
+
+function loadData() {
+  const saved = localStorage.getItem("aled-data");
+  if (saved) {
+    data = JSON.parse(saved);
+  }
+}
+
+// 3. Dopiero teraz wywołanie
+loadData();
+
+console.log("POBRANO FORMULARZ:", document.getElementById("league-form"));
 
 let currentLeagueId = null;
 
