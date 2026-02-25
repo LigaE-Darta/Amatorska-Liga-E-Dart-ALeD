@@ -470,6 +470,9 @@ function renderTable() {
     const cancelledCount = row.cancelled || 0;
     const legsDiff = row.legsFor - row.legsAgainst;
 
+    // 🔥 Forma zawodnika (ostatnie 5 meczów)
+    const form = getPlayerForm(row.player.id, league).join('');
+
     tr.innerHTML = `
       <td>${index + 1}</td>
       <td>${row.player.name}</td>
@@ -482,7 +485,9 @@ function renderTable() {
       <td>${row.avg.toFixed(2)}</td>
       <td>${row.maxes}</td>
       <td>${cancelledCount}</td>
+      <td class="forma">${form}</td>
     `;
+
     tableBody.appendChild(tr);
   });
 }
@@ -515,6 +520,25 @@ function renderMatches() {
       matchesList.appendChild(li);
     });
 }
+function getPlayerForm(playerId, league) {
+  const matches = league.matches
+    .filter(m => m.playerAId === playerId || m.playerBId === playerId)
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    .slice(0, 5); // ostatnie 5 meczów
+
+  return matches.map(m => {
+    if (m.cancelled) return "❌";
+
+    const isA = m.playerAId === playerId;
+    const myScore = isA ? m.scoreA : m.scoreB;
+    const oppScore = isA ? m.scoreB : m.scoreA;
+
+    if (myScore > oppScore) return "🟢";
+    if (myScore < oppScore) return "🔴";
+    return "🟡";
+  });
+}
+
 function renderSeasonStats() {
   const league = getLeagueById(currentLeagueId);
   const stats = league.seasonStats;
