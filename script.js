@@ -274,21 +274,32 @@ function calculateLeagueStats(league) {
     const a = statsByPlayer[m.playerAId];
     const b = statsByPlayer[m.playerBId];
     if (!a || !b) return;
-
     if (m.cancelled) {
-      a.cancelled++;
-      b.cancelled++;
-      return;
-    }
+  a.cancelled++;
+  b.cancelled++;
+  return;
+}
 
-    a.matches++;
-    b.matches++;
+// 🔥 IGNORUJEMY MECZE BEZ WYNIKU
+if (
+  m.scoreA === null ||
+  m.scoreB === null ||
+  m.scoreA === "" ||
+  m.scoreB === "" ||
+  isNaN(m.scoreA) ||
+  isNaN(m.scoreB)
+) {
+  return; // NIE LICZYMY DO TABELI
+}
 
-    a.legsFor += m.scoreA;
-    a.legsAgainst += m.scoreB;
-    b.legsFor += m.scoreB;
-    b.legsAgainst += m.scoreA;
+a.matches++;
+b.matches++;
 
+a.legsFor += m.scoreA;
+a.legsAgainst += m.scoreB;
+b.legsFor += m.scoreB;
+b.legsAgainst += m.scoreA;
+   
     if (m.scoreA > m.scoreB) {
       a.wins++;
       b.losses++;
