@@ -1,4 +1,5 @@
 console.log("START JS");
+console.log("POBRANO FORMULARZ:", document.getElementById("league-form"));
 let data = JSON.parse(localStorage.getItem('aled-data')) || {
   leagues: []
 };
