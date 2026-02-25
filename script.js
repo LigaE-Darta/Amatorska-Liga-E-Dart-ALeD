@@ -99,6 +99,7 @@ backToLeaguesBtn.addEventListener('click', () => {
 });
 
 leagueForm.addEventListener('submit', e => {
+  console.log("SUBMIT DZIAŁA");
   e.preventDefault();
   const name = leagueNameInput.value.trim();
   if (!name) return;
