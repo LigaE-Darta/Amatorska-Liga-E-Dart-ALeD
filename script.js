@@ -417,7 +417,7 @@ b.legsAgainst += m.scoreA;
       }
     }
   });
-
+}
   // ZAPIS STATYSTYK
   league.seasonStats = {
     highestCheckout,
