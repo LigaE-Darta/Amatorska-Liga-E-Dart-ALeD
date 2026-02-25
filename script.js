@@ -536,12 +536,21 @@ function renderMatches() {
       if (m.cancelled) {
         li.classList.add('anulowany');
         li.textContent = `${nameA} vs ${nameB} – MECZ ANULOWANY${m.reason ? ' (' + m.reason + ')' : ''}`;
-      } else if (m.scoreA === null || m.scoreB === null) {
-  li.textContent = `${nameA} vs ${nameB} – oczekuje na wynik`;
-  li.classList.add('oczekuje');
-} else {
-  li.textContent = `${nameA} ${m.scoreA} : ${m.scoreB} ${nameB}`;
-}
+      } 
+      else if (
+        m.scoreA === null || 
+        m.scoreB === null || 
+        m.scoreA === "" || 
+        m.scoreB === "" || 
+        isNaN(m.scoreA) || 
+        isNaN(m.scoreB)
+      ) {
+        li.textContent = `${nameA} vs ${nameB} – oczekuje na wynik`;
+        li.classList.add('oczekuje');
+      } 
+      else {
+        li.textContent = `${nameA} ${m.scoreA} : ${m.scoreB} ${nameB}`;
+      }
 
       matchesList.appendChild(li);
     });
