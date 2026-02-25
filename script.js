@@ -65,11 +65,19 @@ function renderLeagues() {
 }
 
 function openLeague(id) {
+
+  // 🔥 Zapisujemy ID ligi w adresie URL (żeby odświeżenie nie wyrzucało do głównej)
+  const url = new URL(window.location);
+  url.searchParams.set("league", id);
+  window.history.replaceState({}, "", url);
+
   currentLeagueId = id;
   const league = getLeagueById(id);
+
   leagueTitle.textContent = league.name;
   leaguesSection.classList.add('hidden');
   leagueView.classList.remove('hidden');
+
   renderPlayers();
   renderMatchPlayersSelects();
   renderTable();
@@ -108,6 +116,13 @@ leagueForm.addEventListener('submit', e => {
   saveData();
   renderLeagues();
 });
+// 🔥 Auto‑otwieranie ligi z URL
+const params = new URLSearchParams(window.location.search);
+const leagueIdFromUrl = params.get("league");
+
+if (leagueIdFromUrl) {
+    openLeague(leagueIdFromUrl);
+}
 
 playerForm.addEventListener('submit', e => {
   e.preventDefault();
