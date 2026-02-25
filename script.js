@@ -1,3 +1,4 @@
+localStorage.clear();
 let data = JSON.parse(localStorage.getItem('aled-data')) || {
   leagues: []
 };
