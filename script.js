@@ -491,7 +491,30 @@ function renderTable() {
     tableBody.appendChild(tr);
   });
 }
+function generateSchedule(league) {
+  const players = league.players;
+  const matches = [];
 
+  // Każdy z każdym, tylko raz
+  for (let i = 0; i < players.length; i++) {
+    for (let j = i + 1; j < players.length; j++) {
+      matches.push({
+        id: Date.now() + Math.random(), // unikalne ID
+        playerAId: players[i].id,
+        playerBId: players[j].id,
+        scoreA: null,
+        scoreB: null,
+        cancelled: false,
+        reason: "",
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  // Dodajemy do ligi
+  league.matches = matches;
+  saveData();
+}
 function renderMatches() {
   matchesList.innerHTML = '';
   const league = getLeagueById(currentLeagueId);
