@@ -567,22 +567,45 @@ function renderMatches() {
     });
 }
 function getPlayerForm(playerId, league) {
-  const matches = league.matches
-    .filter(m => m.playerAId === playerId || m.playerBId === playerId)
-    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-    .slice(0, 5); // ostatnie 5 meczów
+  // Pobieramy TYLKO mecze z wynikiem
+  const playedMatches = league.matches
+    .filter(m =>
+      (m.playerAId === playerId || m.playerBId === playerId) &&
+      !isNaN(m.scoreA) &&
+      !isNaN(m.scoreB)
+    )
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-  return matches.map(m => {
-    if (m.cancelled) return "❌";
+  const form = [];
 
+  // Ile meczów zawodnik faktycznie rozegrał?
+  const count = playedMatches.length;
+
+  // Jeśli nie ma żadnych meczów → 5 białych
+  if (count === 0) {
+    return ['white', 'white', 'white', 'white', 'white'];
+  }
+
+  // Jeśli ma mniej niż 5 → kolorowe tylko za rozegrane mecze
+  const limit = Math.min(count, 5);
+  const lastMatches = playedMatches.slice(0, limit);
+
+  lastMatches.forEach(m => {
     const isA = m.playerAId === playerId;
     const myScore = isA ? m.scoreA : m.scoreB;
     const oppScore = isA ? m.scoreB : m.scoreA;
 
-    if (myScore > oppScore) return "🟢";
-    if (myScore < oppScore) return "🔴";
-    return "🟡";
+    if (myScore > oppScore) form.push('green');
+    else if (myScore < oppScore) form.push('red');
+    else form.push('orange');
   });
+
+  // Uzupełniamy brakujące sloty białymi
+  while (form.length < 5) {
+    form.push('white');
+  }
+
+  return form;
 }
 
 function renderSeasonStats() {
