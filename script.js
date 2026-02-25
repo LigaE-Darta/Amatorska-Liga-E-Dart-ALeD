@@ -1,7 +1,5 @@
 console.log("START JS");
-let data = {
-  leagues: []
-};
+
 function saveData() {
   localStorage.setItem("aled-data", JSON.stringify(data));
 }
