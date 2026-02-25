@@ -67,13 +67,18 @@ function renderLeagues() {
 
 function openLeague(id) {
 
-  // 🔥 Zapisujemy ID ligi w adresie URL (żeby odświeżenie nie wyrzucało do głównej)
+  const league = getLeagueById(id);
+  if (!league) {
+    console.warn("Liga nie istnieje:", id);
+    return;
+  }
+
+  // 🔥 Zapisujemy ID ligi w adresie URL
   const url = new URL(window.location);
   url.searchParams.set("league", id);
   window.history.replaceState({}, "", url);
 
   currentLeagueId = id;
-  const league = getLeagueById(id);
 
   leagueTitle.textContent = league.name;
   leaguesSection.classList.add('hidden');
