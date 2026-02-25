@@ -121,7 +121,7 @@ leagueForm.addEventListener('submit', e => {
 const params = new URLSearchParams(window.location.search);
 const leagueIdFromUrl = params.get("league");
 
-if (leagueIdFromUrl) {
+if (leagueIdFromUrl && getLeagueById(leagueIdFromUrl)) {
     openLeague(leagueIdFromUrl);
 }
 
