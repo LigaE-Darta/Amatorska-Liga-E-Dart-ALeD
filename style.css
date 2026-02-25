@@ -170,3 +170,15 @@ td.forma {
   font-size: 18px;
   letter-spacing: 3px;
 }
+.form-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+}
+
+.form-dot.white { background-color: #ddd; }
+.form-dot.green { background-color: #4caf50; }
+.form-dot.red { background-color: #f44336; }
+.form-dot.orange { background-color: #ff9800; }
