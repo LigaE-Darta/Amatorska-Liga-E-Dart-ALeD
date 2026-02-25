@@ -644,30 +644,50 @@ function getPlayerForm(playerId, league) {
 
 function renderSeasonStats() {
   const league = getLeagueById(currentLeagueId);
+  if (!league) return;
+
+  // ⭐ Jeśli liga nie ma jeszcze statystyk → ustaw puste
+  if (!league.seasonStats) {
+    league.seasonStats = {
+      highestCheckout: null,
+      highestCheckoutPlayer: null,
+      shortestLeg: null,
+      shortestLegPlayer: null,
+      highestScore: null,
+      highestScorePlayer: null,
+      highestAvg: null,
+      highestAvgPlayer: null,
+      mostMaxes: null,
+      mostMaxesPlayer: null,
+      bestPlayerByPoints: null,
+      bestPlayerByAvg: null
+    };
+  }
+
   const stats = league.seasonStats;
   const list = document.getElementById('season-stats');
 
   list.innerHTML = `
     <li><strong>Najwyższy checkout:</strong> 
-  ${stats.highestCheckout || "—"} 
-  ${stats.highestCheckoutPlayer ? " – " + stats.highestCheckoutPlayer : ""}
-</li>
+      ${stats.highestCheckout || "—"} 
+      ${stats.highestCheckoutPlayer ? " – " + stats.highestCheckoutPlayer : ""}
+    </li>
     <li><strong>Najkrótszy leg:</strong> 
-  ${stats.shortestLeg || "—"} 
-  ${stats.shortestLegPlayer ? " – " + stats.shortestLegPlayer : ""}
-</li>
+      ${stats.shortestLeg || "—"} 
+      ${stats.shortestLegPlayer ? " – " + stats.shortestLegPlayer : ""}
+    </li>
     <li><strong>Najwyższy wynik:</strong> 
-  ${stats.highestScore || "—"} 
-  ${stats.highestScorePlayer ? " – " + stats.highestScorePlayer : ""}
-</li>
+      ${stats.highestScore || "—"} 
+      ${stats.highestScorePlayer ? " – " + stats.highestScorePlayer : ""}
+    </li>
     <li><strong>Najwyższa średnia w meczu:</strong> 
-  ${stats.highestAvg?.toFixed(2) || "—"} 
-  ${stats.highestAvgPlayer ? " – " + stats.highestAvgPlayer : ""}
-</li>
+      ${stats.highestAvg ? stats.highestAvg.toFixed(2) : "—"} 
+      ${stats.highestAvgPlayer ? " – " + stats.highestAvgPlayer : ""}
+    </li>
     <li><strong>Najwięcej maksów (180):</strong> 
-  ${stats.mostMaxes || "—"} 
-  ${stats.mostMaxesPlayer ? " – " + stats.mostMaxesPlayer : ""}
-</li>
+      ${stats.mostMaxes || "—"} 
+      ${stats.mostMaxesPlayer ? " – " + stats.mostMaxesPlayer : ""}
+    </li>
     <li><strong>Najlepszy zawodnik (punkty):</strong> ${stats.bestPlayerByPoints || "—"}</li>
     <li><strong>Najlepszy zawodnik (średnia):</strong> ${stats.bestPlayerByAvg || "—"}</li>
   `;
