@@ -570,26 +570,25 @@ function renderMatches() {
     });
 }
 function getPlayerForm(playerId, league) {
-  // Pobieramy TYLKO mecze z wynikiem
   const playedMatches = league.matches
     .filter(m =>
       (m.playerAId === playerId || m.playerBId === playerId) &&
+      m.scoreA !== null &&
+      m.scoreB !== null &&
+      m.scoreA !== "" &&
+      m.scoreB !== "" &&
       !isNaN(m.scoreA) &&
       !isNaN(m.scoreB)
     )
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   const form = [];
-
-  // Ile meczów zawodnik faktycznie rozegrał?
   const count = playedMatches.length;
 
-  // Jeśli nie ma żadnych meczów → 5 białych
   if (count === 0) {
     return ['white', 'white', 'white', 'white', 'white'];
   }
 
-  // Jeśli ma mniej niż 5 → kolorowe tylko za rozegrane mecze
   const limit = Math.min(count, 5);
   const lastMatches = playedMatches.slice(0, limit);
 
@@ -603,7 +602,6 @@ function getPlayerForm(playerId, league) {
     else form.push('orange');
   });
 
-  // Uzupełniamy brakujące sloty białymi
   while (form.length < 5) {
     form.push('white');
   }
