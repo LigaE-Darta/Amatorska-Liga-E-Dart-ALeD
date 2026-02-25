@@ -570,10 +570,6 @@ function generateSchedule(league) {
   saveData();
 }
 
-  // Dodajemy do ligi
-  league.matches = matches;
-  saveData();
-}
 function renderMatches() {
   matchesList.innerHTML = '';
   const league = getLeagueById(currentLeagueId);
