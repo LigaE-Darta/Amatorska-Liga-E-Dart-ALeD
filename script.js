@@ -506,24 +506,51 @@ const form = formArray
   });
 }
 function generateSchedule(league) {
-  const players = league.players;
+  let players = [...league.players];
   const matches = [];
 
-  // Każdy z każdym, tylko raz
-  for (let i = 0; i < players.length; i++) {
-    for (let j = i + 1; j < players.length; j++) {
-      matches.push({
-        id: Date.now() + Math.random(), // unikalne ID
-        playerAId: players[i].id,
-        playerBId: players[j].id,
-        scoreA: null,
-        scoreB: null,
-        cancelled: false,
-        reason: "",
-        timestamp: new Date().toISOString()
-      });
-    }
+  // Jeśli liczba graczy nieparzysta → dodajemy BYE
+  if (players.length % 2 !== 0) {
+    players.push({ id: "bye", name: "BYE" });
   }
+
+  const n = players.length;
+  const rounds = n - 1;
+  const half = n / 2;
+
+  let rotation = players.slice();
+
+  for (let round = 1; round <= rounds; round++) {
+    for (let i = 0; i < half; i++) {
+      const home = rotation[i];
+      const away = rotation[n - 1 - i];
+
+      // Pomijamy BYE
+      if (home.id !== "bye" && away.id !== "bye") {
+        matches.push({
+          id: Date.now() + Math.random(),
+          playerAId: home.id,
+          playerBId: away.id,
+          scoreA: null,
+          scoreB: null,
+          cancelled: false,
+          reason: "",
+          round: round, // ⭐ KOLEJKA
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+
+    // Rotacja zawodników (algorytm Berger)
+    const fixed = rotation[0];
+    const rest = rotation.slice(1);
+    rest.unshift(rest.pop());
+    rotation = [fixed, ...rest];
+  }
+
+  league.matches = matches;
+  saveData();
+}
 
   // Dodajemy do ligi
   league.matches = matches;
