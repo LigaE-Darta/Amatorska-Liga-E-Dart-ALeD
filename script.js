@@ -592,4 +592,22 @@ function renderSeasonStats() {
     <li><strong>Najlepszy zawodnik (średnia):</strong> ${stats.bestPlayerByAvg || "—"}</li>
   `;
 }
+document.getElementById("generate-schedule-btn").addEventListener("click", () => {
+  const league = getLeagueById(currentLeagueId);
+  if (!league) return;
+
+  if (league.players.length < 2) {
+    alert("Potrzeba minimum 2 zawodników, aby wygenerować terminarz.");
+    return;
+  }
+
+  if (league.matches.length > 0) {
+    const confirmReset = confirm("Terminarz już istnieje. Nadpisać?");
+    if (!confirmReset) return;
+  }
+
+  generateSchedule(league);
+  renderMatches();
+  alert("Terminarz wygenerowany!");
+});
 renderLeagues();
