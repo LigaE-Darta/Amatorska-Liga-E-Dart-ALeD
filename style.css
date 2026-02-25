@@ -166,3 +166,7 @@ th:nth-child(11), td:nth-child(11) { width: 40px; } /* A (anulowane) */
     z-index: -1;
     background-attachment: fixed;
 }
+td.forma {
+  font-size: 18px;
+  letter-spacing: 3px;
+}
