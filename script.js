@@ -482,7 +482,10 @@ function renderTable() {
     const legsDiff = row.legsFor - row.legsAgainst;
 
     // 🔥 Forma zawodnika (ostatnie 5 meczów)
-    const form = getPlayerForm(row.player.id, league).join('');
+   const formArray = getPlayerForm(row.player.id, league);
+const form = formArray
+  .map(color => `<span class="form-dot ${color}"></span>`)
+  .join('');
 
     tr.innerHTML = `
       <td>${index + 1}</td>
