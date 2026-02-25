@@ -1,4 +1,17 @@
 console.log("START JS");
+let data = {
+  leagues: []
+};
+function saveData() {
+  localStorage.setItem("aled-data", JSON.stringify(data));
+}
+function loadData() {
+  const saved = localStorage.getItem("aled-data");
+  if (saved) {
+    data = JSON.parse(saved);
+  }
+}
+loadData();
 console.log("POBRANO FORMULARZ:", document.getElementById("league-form"));
 let data = JSON.parse(localStorage.getItem('aled-data')) || {
   leagues: []
@@ -99,8 +112,8 @@ backToLeaguesBtn.addEventListener('click', () => {
 });
 
 leagueForm.addEventListener('submit', e => {
-  console.log("SUBMIT DZIAŁA");
   e.preventDefault();
+  console.log("SUBMIT DZIAŁA");
   const name = leagueNameInput.value.trim();
   if (!name) return;
   const promotion = parseInt(leaguePromotionInput.value) || 0;
