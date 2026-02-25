@@ -593,6 +593,7 @@ function renderSeasonStats() {
   `;
 }
 document.getElementById("generate-schedule-btn").addEventListener("click", () => {
+  console.log("Klik działa!");
   const league = getLeagueById(currentLeagueId);
   if (!league) return;
 
