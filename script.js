@@ -13,6 +13,7 @@ function loadData() {
 let data = JSON.parse(localStorage.getItem('aled-data')) || {
   leagues: []
 };
+let selectedMatch = null;
 
 // 2. Funkcje zapisu/odczytu
 function saveData() {
@@ -248,7 +249,18 @@ matchForm.addEventListener('submit', e => {
     };
   }
 
-  const match = {
+ if (selectedMatch) {
+  // 🔥 Aktualizacja istniejącego meczu
+  selectedMatch.scoreA = scoreA;
+  selectedMatch.scoreB = scoreB;
+  selectedMatch.cancelled = cancelled;
+  selectedMatch.reason = cancelled ? cancelReasonInput.value.trim() : '';
+  selectedMatch.statsA = statsA;
+  selectedMatch.statsB = statsB;
+  selectedMatch.timestamp = new Date().toISOString();
+} else {
+  // 🔥 Dodawanie nowego meczu (jeśli ktoś chce ręcznie)
+  league.matches.push({
     id: 'm-' + Date.now(),
     playerAId,
     playerBId,
@@ -259,9 +271,10 @@ matchForm.addEventListener('submit', e => {
     statsA,
     statsB,
     timestamp: new Date().toISOString()
-  };
+  });
+}
 
-  league.matches.push(match);
+selectedMatch = null; // reset po zapisie
 
   scoreAInput.value = '';
   scoreBInput.value = '';
@@ -628,8 +641,11 @@ function renderSchedule(league) {
           ? `${nameA} ${m.scoreA}:${m.scoreB} ${nameB}`
           : `${nameA} vs ${nameB} – oczekuje na wynik`;
 
-      div.textContent = text;
-      container.appendChild(div);
+    div.innerHTML = `
+  ${text}
+  <button onclick="selectMatch('${m.id}')">Wybierz</button>
+`;
+container.appendChild(div); 
     });
   });
 }
