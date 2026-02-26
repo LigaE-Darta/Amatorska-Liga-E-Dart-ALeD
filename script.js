@@ -40,14 +40,14 @@ function saveData() {
 const leaguesSection = document.getElementById('leagues-section');
 const leaguesList = document.getElementById('leagues-list');
 const leagueForm = document.getElementById('league-form');
-NameInput = document.getElementById('league-name');
-PromotionInput = document.getElementById('league-promotion');
-RelegationInput = document.getElementById('league-relegation');
 
-View = document.getElementById('league-view');
-Title = document.getElementById('league-title');
 const backToLeaguesBtn = document.getElementById('back-to-leagues');
+const leagueNameInput = document.getElementById('league-name');
+const leaguePromotionInput = document.getElementById('league-promotion');
+const leagueRelegationInput = document.getElementById('league-relegation');
 
+const leagueView = document.getElementById('league-view');
+const leagueTitle = document.getElementById('league-title');
 const playerForm = document.getElementById('player-form');
 const playerNameInput = document.getElementById('player-name');
 const playersList = document.getElementById('players-list');
@@ -82,14 +82,14 @@ function getLeagueById(id) {
 }
 
 function renderLeagues() {
-  sList.innerHTML = '';
+  leaguesList.innerHTML = '';
   data.leagues.forEach(league => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.textContent = league.name;
     btn.addEventListener('click', () => openLeague(league.id));
     li.appendChild(btn);
-    sList.appendChild(li);
+    leaguesList.appendChild(li);
   });
 }
 
