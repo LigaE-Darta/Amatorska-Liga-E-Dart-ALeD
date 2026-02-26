@@ -179,7 +179,7 @@ playerForm.addEventListener('submit', e => {
 
 function renderPlayers() {
   playersList.innerHTML = '';
-   = getLeagueById(currentLeagueId);
+  const league = getLeagueById(currentLeagueId);
   league.players.forEach(p => {
     const li = document.createElement('li');
     li.textContent = p.name;
