@@ -13,7 +13,6 @@ function loadData() {
 let data = JSON.parse(localStorage.getItem('aled-data')) || {
   leagues: []
 };
-let selectedMatch = null;
 
 // 2. Funkcje zapisu/odczytu
 function saveData() {
@@ -249,6 +248,41 @@ matchForm.addEventListener('submit', e => {
       maxes: parseInt(maxesBInput.value) || 0
     };
   }
+  // 🔍 Szukamy meczu w terminarzu po parach zawodników
+const matchToUpdate = league.matches.find(m =>
+  (m.playerAId === playerAId && m.playerBId === playerBId) ||
+  (m.playerAId === playerBId && m.playerBId === playerAId)
+);
+
+if (matchToUpdate) {
+  matchToUpdate.scoreA = scoreA;
+  matchToUpdate.scoreB = scoreB;
+  matchToUpdate.cancelled = cancelled;
+  matchToUpdate.reason = cancelled ? cancelReasonInput.value.trim() : '';
+  matchToUpdate.statsA = statsA;
+  matchToUpdate.statsB = statsB;
+  matchToUpdate.timestamp = new Date().toISOString();
+} else {
+  league.matches.push({
+    id: 'm-' + Date.now() + '-' + Math.random(),
+    playerAId,
+    playerBId,
+    scoreA,
+    scoreB,
+    cancelled,
+    reason: cancelled ? cancelReasonInput.value.trim() : '',
+    statsA,
+    statsB,
+    round: null,
+    timestamp: new Date().toISOString()
+  });
+}
+  saveData();
+renderSchedule(league);
+renderTable();
+renderPlayers();
+renderMatchPlayersSelects();
+});
 if (selectedMatch) {
   // 🔥 Aktualizacja istniejącego meczu
   selectedMatch.scoreA = scoreA;
@@ -274,7 +308,7 @@ if (selectedMatch) {
   });
 }
 
-selectedMatch = null; // reset po zapisie
+  
 
   scoreAInput.value = '';
   scoreBInput.value = '';
@@ -641,19 +675,12 @@ function renderSchedule(league) {
           ? `${nameA} ${m.scoreA}:${m.scoreB} ${nameB}`
           : `${nameA} vs ${nameB} – oczekuje na wynik`;
 
-    div.innerHTML = `
-  ${text}
-  <button onclick="selectMatch('${m.id}')">Wybierz</button>
-`;
+ div.innerHTML = `${text}`;  
 container.appendChild(div); 
     });
   });
 }
-function selectMatch(matchId) {
-  const league = getLeagueById(currentLeagueId);
-  selectedMatch = league.matches.find(m => m.id === matchId);
-  console.log("Wybrano mecz:", selectedMatch);
-}
+
 function renderHistory(league) {
   const container = document.getElementById("history");
   container.innerHTML = "";
