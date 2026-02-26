@@ -578,7 +578,7 @@ function generateSchedule(league) {
       // Pomijamy BYE
       if (home.id !== "bye" && away.id !== "bye") {
         matches.push({
-          id: Date.now() + Math.random(),
+          id: 'm-' + Date.now() + '-' + Math.random(),
           playerAId: home.id,
           playerBId: away.id,
           scoreA: null,
