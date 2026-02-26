@@ -37,15 +37,15 @@ function saveData() {
   localStorage.setItem('aled-data', JSON.stringify(data));
 }
 
-const leaguesSection = document.getElementById('leagues-section');
-const leaguesList = document.getElementById('leagues-list');
-const leagueForm = document.getElementById('league-form');
-const leagueNameInput = document.getElementById('league-name');
-const leaguePromotionInput = document.getElementById('league-promotion');
-const leagueRelegationInput = document.getElementById('league-relegation');
+sSection = document.getElementById('leagues-section');
+sList = document.getElementById('leagues-list');
+Form = document.getElementById('league-form');
+NameInput = document.getElementById('league-name');
+PromotionInput = document.getElementById('league-promotion');
+RelegationInput = document.getElementById('league-relegation');
 
-const leagueView = document.getElementById('league-view');
-const leagueTitle = document.getElementById('league-title');
+View = document.getElementById('league-view');
+Title = document.getElementById('league-title');
 const backToLeaguesBtn = document.getElementById('back-to-leagues');
 
 const playerForm = document.getElementById('player-form');
@@ -95,7 +95,7 @@ function renderLeagues() {
 
 function openLeague(id) {
 
-  const league = getLeagueById(id);
+   = getLeagueById(id);
   if (!league) {
     console.warn("Liga nie istnieje:", id);
     return;
@@ -155,7 +155,7 @@ leagueForm.addEventListener('submit', e => {
 });
 // 🔥 Auto‑otwieranie ligi z URL
 const params = new URLSearchParams(window.location.search);
-const leagueIdFromUrl = params.get("league");
+IdFromUrl = params.get("league");
 
 if (leagueIdFromUrl && getLeagueById(leagueIdFromUrl)) {
     openLeague(leagueIdFromUrl);
@@ -165,7 +165,7 @@ playerForm.addEventListener('submit', e => {
   e.preventDefault();
   const name = playerNameInput.value.trim();
   if (!name || !currentLeagueId) return;
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
   league.players.push({
     id: 'p-' + Date.now() + '-' + league.players.length,
     name
@@ -179,7 +179,7 @@ playerForm.addEventListener('submit', e => {
 
 function renderPlayers() {
   playersList.innerHTML = '';
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
   league.players.forEach(p => {
     const li = document.createElement('li');
     li.textContent = p.name;
@@ -188,7 +188,7 @@ function renderPlayers() {
 }
 
 function renderMatchPlayersSelects() {
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
   matchPlayerASelect.innerHTML = '<option value="">Zawodnik A</option>';
   matchPlayerBSelect.innerHTML = '<option value="">Zawodnik B</option>';
   league.players.forEach(p => {
@@ -211,7 +211,7 @@ matchCancelledCheckbox.addEventListener('change', () => {
 
 matchForm.addEventListener('submit', e => {
   e.preventDefault();
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
   if (!league) return;
 
   const playerAId = matchPlayerASelect.value;
@@ -279,9 +279,7 @@ matchForm.addEventListener('submit', e => {
 
   saveData();
   renderTable();
-  const league = getLeagueById(currentLeagueId);
-renderSchedule(league);
-renderHistory(league);
+ renderMatches();
   renderSeasonStats();
 });
 function calculateLeagueStats(league) {
@@ -499,7 +497,7 @@ function compareHeadToHead(playerAId, playerBId, matches) {
 }
 function renderTable() {
   tableBody.innerHTML = '';
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
   if (!league) return;
 
   const rows = calculateLeagueStats(league);
@@ -710,7 +708,7 @@ function getPlayerForm(playerId, league) {
 }
 
 function renderSeasonStats() {
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
   if (!league) return;
 
   // ⭐ Jeśli liga nie ma jeszcze statystyk → ustaw puste
@@ -761,7 +759,7 @@ function renderSeasonStats() {
 }
 document.getElementById("generate-schedule-btn").addEventListener("click", () => {
   console.log("Klik działa!");
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
   if (!league) return;
 
   if (league.players.length < 2) {
@@ -775,7 +773,7 @@ document.getElementById("generate-schedule-btn").addEventListener("click", () =>
   }
 
   generateSchedule(league);
-  const league = getLeagueById(currentLeagueId);
+   = getLeagueById(currentLeagueId);
 renderSchedule(league);
 renderHistory(league);
   alert("Terminarz wygenerowany!");
