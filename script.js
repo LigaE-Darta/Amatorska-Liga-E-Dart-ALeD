@@ -76,6 +76,7 @@ const highestScoreBInput = document.getElementById('highest-score-b');
 const maxesBInput = document.getElementById('maxes-b');
 
 const matchesList = document.getElementById('matches-list');
+const leagueForm = document.getElementById('league-form');
 
 function getLeagueById(id) {
   return data.leagues.find(l => l.id === id);
