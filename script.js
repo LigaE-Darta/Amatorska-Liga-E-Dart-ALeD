@@ -80,15 +80,37 @@ const matchesList = document.getElementById('matches-list');
 function getLeagueById(id) {
   return data.leagues.find(l => l.id === id);
 }
+function deleteLeague(id) {
+  data.leagues = data.leagues.filter(l => l.id !== id);
+  saveData();
+  renderLeagues();
+}
 
 function renderLeagues() {
   leaguesList.innerHTML = '';
+
   data.leagues.forEach(league => {
     const li = document.createElement('li');
-    const btn = document.createElement('button');
-    btn.textContent = league.name;
-    btn.addEventListener('click', () => openLeague(league.id));
-    li.appendChild(btn);
+
+    // przycisk otwierania ligi
+    const openBtn = document.createElement('button');
+    openBtn.textContent = league.name;
+    openBtn.addEventListener('click', () => openLeague(league.id));
+
+    // przycisk usuwania ligi
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Usuń";
+    deleteBtn.classList.add("delete-league-btn");
+
+    deleteBtn.addEventListener('click', () => {
+      const confirmDelete = confirm(`Czy na pewno chcesz usunąć ligę "${league.name}"?`);
+      if (confirmDelete) {
+        deleteLeague(league.id);
+      }
+    });
+
+    li.appendChild(openBtn);
+    li.appendChild(deleteBtn);
     leaguesList.appendChild(li);
   });
 }
