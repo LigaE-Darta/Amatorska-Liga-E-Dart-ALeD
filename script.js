@@ -115,7 +115,7 @@ function openLeague(id) {
   renderPlayers();
   renderMatchPlayersSelects();
   renderTable();
-  const league = getLeagueById(currentLeagueId);
+ 
 renderSchedule(league);
 renderHistory(league);
   renderSeasonStats();
@@ -165,6 +165,7 @@ playerForm.addEventListener('submit', e => {
   e.preventDefault();
   const name = playerNameInput.value.trim();
   if (!name || !currentLeagueId) return;
+  const league = getLeagueById(currentLeagueId);
   league.players.push({
     id: 'p-' + Date.now() + '-' + league.players.length,
     name
