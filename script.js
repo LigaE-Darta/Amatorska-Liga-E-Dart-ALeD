@@ -211,7 +211,7 @@ matchCancelledCheckbox.addEventListener('change', () => {
 
 matchForm.addEventListener('submit', e => {
   e.preventDefault();
-   = getLeagueById(currentLeagueId);
+  const league = getLeagueById(currentLeagueId);
   if (!league) return;
 
   const playerAId = matchPlayerASelect.value;
