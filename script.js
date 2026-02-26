@@ -248,8 +248,7 @@ matchForm.addEventListener('submit', e => {
       maxes: parseInt(maxesBInput.value) || 0
     };
   }
-
- if (selectedMatch) {
+if (selectedMatch) {
   // 🔥 Aktualizacja istniejącego meczu
   selectedMatch.scoreA = scoreA;
   selectedMatch.scoreB = scoreB;
@@ -648,6 +647,11 @@ function renderSchedule(league) {
 container.appendChild(div); 
     });
   });
+}
+function selectMatch(matchId) {
+  const league = getLeagueById(currentLeagueId);
+  selectedMatch = league.matches.find(m => m.id === matchId);
+  console.log("Wybrano mecz:", selectedMatch);
 }
 function renderHistory(league) {
   const container = document.getElementById("history");
