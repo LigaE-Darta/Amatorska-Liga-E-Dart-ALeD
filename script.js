@@ -708,7 +708,7 @@ function getPlayerForm(playerId, league) {
 }
 
 function renderSeasonStats() {
-   = getLeagueById(currentLeagueId);
+  const league = getLeagueById(currentLeagueId);
   if (!league) return;
 
   // ⭐ Jeśli liga nie ma jeszcze statystyk → ustaw puste
