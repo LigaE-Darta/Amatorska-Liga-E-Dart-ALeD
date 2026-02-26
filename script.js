@@ -175,6 +175,7 @@ playerForm.addEventListener('submit', e => {
   });
   playerNameInput.value = '';
   saveData();
+  renderSchedule(league);
   renderPlayers();
   renderMatchPlayersSelects();
   renderTable();
@@ -260,7 +261,7 @@ if (selectedMatch) {
 } else {
   // 🔥 Dodawanie nowego meczu (jeśli ktoś chce ręcznie)
   league.matches.push({
-    id: 'm-' + Date.now(),
+    id: 'm-' + Date.now() + '-' + Math.random(),
     playerAId,
     playerBId,
     scoreA,
