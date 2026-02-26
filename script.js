@@ -157,6 +157,8 @@ leagueForm.addEventListener('submit', e => {
 // 🔥 Auto‑otwieranie ligi z URL
 const params = new URLSearchParams(window.location.search);
 IdFromUrl = params.get("league");
+const urlParams = new URLSearchParams(window.location.search);
+const leagueIdFromUrl = urlParams.get("league");
 
 if (leagueIdFromUrl && getLeagueById(leagueIdFromUrl)) {
     openLeague(leagueIdFromUrl);
