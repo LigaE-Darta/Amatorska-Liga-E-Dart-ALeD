@@ -331,7 +331,7 @@ renderSchedule(league);
 renderTable();
 renderPlayers();
 renderMatchPlayersSelects();
-});
+}
 function calculateLeagueStats(league) {
 
   const statsByPlayer = {};
