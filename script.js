@@ -497,7 +497,7 @@ function compareHeadToHead(playerAId, playerBId, matches) {
 }
 function renderTable() {
   tableBody.innerHTML = '';
-   = getLeagueById(currentLeagueId);
+  const league = getLeagueById(currentLeagueId);
   if (!league) return;
 
   const rows = calculateLeagueStats(league);
