@@ -115,7 +115,9 @@ function openLeague(id) {
   renderPlayers();
   renderMatchPlayersSelects();
   renderTable();
-  renderMatches();
+  const league = getLeagueById(currentLeagueId);
+renderSchedule(league);
+renderHistory(league);
   renderSeasonStats();
 }
 
@@ -277,7 +279,9 @@ matchForm.addEventListener('submit', e => {
 
   saveData();
   renderTable();
-  renderMatches();
+  const league = getLeagueById(currentLeagueId);
+renderSchedule(league);
+renderHistory(league);
   renderSeasonStats();
 });
 function calculateLeagueStats(league) {
@@ -586,44 +590,83 @@ function generateSchedule(league) {
   saveData();
 }
 
-function renderMatches() {
-  matchesList.innerHTML = '';
-  const league = getLeagueById(currentLeagueId);
-  if (!league) return;
+function renderSchedule(league) {
+  const container = document.getElementById("schedule");
+  container.innerHTML = "";
 
   const playersMap = {};
   league.players.forEach(p => {
     playersMap[p.id] = p.name;
   });
 
-  league.matches
-    .slice()
+  const rounds = {};
+
+  league.matches.forEach(m => {
+    if (!rounds[m.round]) rounds[m.round] = [];
+    rounds[m.round].push(m);
+  });
+
+  Object.keys(rounds).sort((a, b) => a - b).forEach(r => {
+    const header = document.createElement("h3");
+    header.textContent = `Kolejka ${r}`;
+    container.appendChild(header);
+
+    rounds[r].forEach(m => {
+      const div = document.createElement("div");
+      div.classList.add("match-item");
+
+      const nameA = playersMap[m.playerAId] || "???";
+      const nameB = playersMap[m.playerBId] || "???";
+
+      const text =
+        m.scoreA !== null &&
+        m.scoreB !== null &&
+        m.scoreA !== "" &&
+        m.scoreB !== "" &&
+        !isNaN(m.scoreA) &&
+        !isNaN(m.scoreB)
+          ? `${nameA} ${m.scoreA}:${m.scoreB} ${nameB}`
+          : `${nameA} vs ${nameB} – oczekuje na wynik`;
+
+      div.textContent = text;
+      container.appendChild(div);
+    });
+  });
+}
+function renderHistory(league) {
+  const container = document.getElementById("history");
+  container.innerHTML = "";
+
+  const playersMap = {};
+  league.players.forEach(p => {
+    playersMap[p.id] = p.name;
+  });
+
+  const played = league.matches.filter(m =>
+    m.scoreA !== null &&
+    m.scoreB !== null &&
+    m.scoreA !== "" &&
+    m.scoreB !== "" &&
+    !isNaN(m.scoreA) &&
+    !isNaN(m.scoreB)
+  );
+
+  if (played.length === 0) {
+    container.textContent = "Brak rozegranych meczów.";
+    return;
+  }
+
+  played
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
     .forEach(m => {
-      const li = document.createElement('li');
-      const nameA = playersMap[m.playerAId] || '???';
-      const nameB = playersMap[m.playerBId] || '???';
+      const div = document.createElement("div");
+      div.classList.add("history-item");
 
-      if (m.cancelled) {
-        li.classList.add('anulowany');
-        li.textContent = `${nameA} vs ${nameB} – MECZ ANULOWANY${m.reason ? ' (' + m.reason + ')' : ''}`;
-      } 
-      else if (
-        m.scoreA === null || 
-        m.scoreB === null || 
-        m.scoreA === "" || 
-        m.scoreB === "" || 
-        isNaN(m.scoreA) || 
-        isNaN(m.scoreB)
-      ) {
-        li.textContent = `${nameA} vs ${nameB} – oczekuje na wynik`;
-        li.classList.add('oczekuje');
-      } 
-      else {
-        li.textContent = `${nameA} ${m.scoreA} : ${m.scoreB} ${nameB}`;
-      }
+      const nameA = playersMap[m.playerAId] || "???";
+      const nameB = playersMap[m.playerBId] || "???";
 
-      matchesList.appendChild(li);
+      div.textContent = `${nameA} ${m.scoreA}:${m.scoreB} ${nameB}`;
+      container.appendChild(div);
     });
 }
 function getPlayerForm(playerId, league) {
@@ -732,7 +775,9 @@ document.getElementById("generate-schedule-btn").addEventListener("click", () =>
   }
 
   generateSchedule(league);
-  renderMatches();
+  const league = getLeagueById(currentLeagueId);
+renderSchedule(league);
+renderHistory(league);
   alert("Terminarz wygenerowany!");
 });
 renderLeagues();
