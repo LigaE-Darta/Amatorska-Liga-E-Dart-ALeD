@@ -188,7 +188,7 @@ function renderPlayers() {
 }
 
 function renderMatchPlayersSelects() {
-   = getLeagueById(currentLeagueId);
+  const league = getLeagueById(currentLeagueId);
   matchPlayerASelect.innerHTML = '<option value="">Zawodnik A</option>';
   matchPlayerBSelect.innerHTML = '<option value="">Zawodnik B</option>';
   league.players.forEach(p => {
