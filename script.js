@@ -37,9 +37,9 @@ function saveData() {
   localStorage.setItem('aled-data', JSON.stringify(data));
 }
 
-sSection = document.getElementById('leagues-section');
-sList = document.getElementById('leagues-list');
-Form = document.getElementById('league-form');
+const leaguesSection = document.getElementById('leagues-section');
+const leaguesList = document.getElementById('leagues-list');
+const leagueForm = document.getElementById('league-form');
 NameInput = document.getElementById('league-name');
 PromotionInput = document.getElementById('league-promotion');
 RelegationInput = document.getElementById('league-relegation');
@@ -76,7 +76,6 @@ const highestScoreBInput = document.getElementById('highest-score-b');
 const maxesBInput = document.getElementById('maxes-b');
 
 const matchesList = document.getElementById('matches-list');
-const leagueForm = document.getElementById('league-form');
 
 function getLeagueById(id) {
   return data.leagues.find(l => l.id === id);
