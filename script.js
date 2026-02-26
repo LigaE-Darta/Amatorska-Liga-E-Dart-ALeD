@@ -95,7 +95,7 @@ function renderLeagues() {
 
 function openLeague(id) {
 
-   = getLeagueById(id);
+  const league = getLeagueById(id);
   if (!league) {
     console.warn("Liga nie istnieje:", id);
     return;
