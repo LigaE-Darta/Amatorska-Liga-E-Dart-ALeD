@@ -326,10 +326,11 @@ if (selectedMatch) {
   cancelReasonInput.value = '';
   statsBlocks.style.display = 'grid';
 
-  saveData();
-  renderTable();
- renderMatches();
-  renderSeasonStats();
+ saveData();
+renderSchedule(league);
+renderTable();
+renderPlayers();
+renderMatchPlayersSelects();
 });
 function calculateLeagueStats(league) {
 
