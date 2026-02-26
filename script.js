@@ -283,55 +283,7 @@ renderTable();
 renderPlayers();
 renderMatchPlayersSelects();
 });
-if (selectedMatch) {
-  // 🔥 Aktualizacja istniejącego meczu
-  selectedMatch.scoreA = scoreA;
-  selectedMatch.scoreB = scoreB;
-  selectedMatch.cancelled = cancelled;
-  selectedMatch.reason = cancelled ? cancelReasonInput.value.trim() : '';
-  selectedMatch.statsA = statsA;
-  selectedMatch.statsB = statsB;
-  selectedMatch.timestamp = new Date().toISOString();
-} else {
-  // 🔥 Dodawanie nowego meczu (jeśli ktoś chce ręcznie)
-  league.matches.push({
-    id: 'm-' + Date.now() + '-' + Math.random(),
-    playerAId,
-    playerBId,
-    scoreA,
-    scoreB,
-    cancelled,
-    reason: cancelled ? cancelReasonInput.value.trim() : '',
-    statsA,
-    statsB,
-    timestamp: new Date().toISOString()
-  });
-}
 
-  
-
-  scoreAInput.value = '';
-  scoreBInput.value = '';
-  avgAInput.value = '';
-  bestLegAInput.value = '';
-  bestCheckoutAInput.value = '';
-  highestScoreAInput.value = '';
-  maxesAInput.value = 0;
-  avgBInput.value = '';
-  bestLegBInput.value = '';
-  bestCheckoutBInput.value = '';
-  highestScoreBInput.value = '';
-  maxesBInput.value = 0;
-  matchCancelledCheckbox.checked = false;
-  cancelReasonInput.value = '';
-  statsBlocks.style.display = 'grid';
-
- saveData();
-renderSchedule(league);
-renderTable();
-renderPlayers();
-renderMatchPlayersSelects();
-}
 function calculateLeagueStats(league) {
 
   const statsByPlayer = {};
