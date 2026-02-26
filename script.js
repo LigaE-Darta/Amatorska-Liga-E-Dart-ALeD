@@ -83,14 +83,14 @@ function getLeagueById(id) {
 }
 
 function renderLeagues() {
-  leaguesList.innerHTML = '';
+  sList.innerHTML = '';
   data.leagues.forEach(league => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.textContent = league.name;
     btn.addEventListener('click', () => openLeague(league.id));
     li.appendChild(btn);
-    leaguesList.appendChild(li);
+    sList.appendChild(li);
   });
 }
 
