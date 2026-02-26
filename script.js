@@ -773,7 +773,7 @@ document.getElementById("generate-schedule-btn").addEventListener("click", () =>
   }
 
   generateSchedule(league);
-   = getLeagueById(currentLeagueId);
+  const league = getLeagueById(currentLeagueId);
 renderSchedule(league);
 renderHistory(league);
   alert("Terminarz wygenerowany!");
