@@ -631,31 +631,39 @@ function renderSchedule(league) {
   Object.keys(rounds).sort((a, b) => a - b).forEach(r => {
     const header = document.createElement("h3");
     header.textContent = `Kolejka ${r}`;
+    header.classList.add("match-round-title");
     container.appendChild(header);
 
     rounds[r].forEach(m => {
       const div = document.createElement("div");
-      div.classList.add("match-item");
 
       const nameA = playersMap[m.playerAId] || "???";
       const nameB = playersMap[m.playerBId] || "???";
 
-      const text =
+      const hasScore =
         m.scoreA !== null &&
         m.scoreB !== null &&
         m.scoreA !== "" &&
         m.scoreB !== "" &&
         !isNaN(m.scoreA) &&
-        !isNaN(m.scoreB)
-          ? `${nameA} ${m.scoreA}:${m.scoreB} ${nameB}`
-          : `${nameA} vs ${nameB}`;
+        !isNaN(m.scoreB);
 
- div.innerHTML = `${text}`;  
-container.appendChild(div); 
+      div.classList.add("match-card");
+      if (hasScore) div.classList.add("played");
+
+      div.innerHTML = `
+        <span class="teams">${nameA} vs ${nameB}</span>
+        ${
+          hasScore
+            ? `<span class="score">${m.scoreA} : ${m.scoreB}</span>`
+            : `<span class="pending">do rozegrania</span>`
+        }
+      `;
+
+      container.appendChild(div);
     });
   });
 }
-
 function renderHistory(league) {
   const container = document.getElementById("history");
   container.innerHTML = "";
