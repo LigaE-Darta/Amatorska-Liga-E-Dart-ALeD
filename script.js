@@ -648,7 +648,7 @@ function renderSchedule(league) {
         !isNaN(m.scoreA) &&
         !isNaN(m.scoreB)
           ? `${nameA} ${m.scoreA}:${m.scoreB} ${nameB}`
-          : `${nameA} vs ${nameB} – oczekuje na wynik`;
+          : `${nameA} vs ${nameB}';
 
  div.innerHTML = `${text}`;  
 container.appendChild(div); 
@@ -765,10 +765,6 @@ function renderSeasonStats() {
     <li><strong>Najkrótszy leg:</strong> 
       ${stats.shortestLeg || "—"} 
       ${stats.shortestLegPlayer ? " – " + stats.shortestLegPlayer : ""}
-    </li>
-    <li><strong>Najwyższy wynik:</strong> 
-      ${stats.highestScore || "—"} 
-      ${stats.highestScorePlayer ? " – " + stats.highestScorePlayer : ""}
     </li>
     <li><strong>Najwyższa średnia w meczu:</strong> 
       ${stats.highestAvg ? stats.highestAvg.toFixed(2) : "—"} 
