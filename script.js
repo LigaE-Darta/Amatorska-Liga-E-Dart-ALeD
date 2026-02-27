@@ -648,7 +648,7 @@ function renderSchedule(league) {
         !isNaN(m.scoreA) &&
         !isNaN(m.scoreB)
           ? `${nameA} ${m.scoreA}:${m.scoreB} ${nameB}`
-          : `${nameA} vs ${nameB}';
+          : `${nameA} vs ${nameB}`;
 
  div.innerHTML = `${text}`;  
 container.appendChild(div); 
