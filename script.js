@@ -629,11 +629,19 @@ function renderSchedule(league) {
   });
 
   Object.keys(rounds).sort((a, b) => a - b).forEach(r => {
-    const header = document.createElement("h3");
-    header.textContent = `Kolejka ${r}`;
-    header.classList.add("match-round-title");
-    container.appendChild(header);
 
+    // PRZYCISK KOLEJKI
+    const toggle = document.createElement("button");
+    toggle.classList.add("round-toggle");
+    toggle.textContent = `Kolejka ${r}`;
+    container.appendChild(toggle);
+
+    // KONTENER NA MECZE (UKRYTY)
+    const content = document.createElement("div");
+    content.classList.add("round-content");
+    container.appendChild(content);
+
+    // MECZE W KOLEJCE
     rounds[r].forEach(m => {
       const div = document.createElement("div");
 
@@ -660,7 +668,13 @@ function renderSchedule(league) {
         }
       `;
 
-      container.appendChild(div);
+      content.appendChild(div);
+    });
+
+    // ROZWIJANIE / ZWIJANIE
+    toggle.addEventListener("click", () => {
+      content.style.display =
+        content.style.display === "block" ? "none" : "block";
     });
   });
 }
