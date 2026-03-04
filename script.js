@@ -1056,7 +1056,6 @@ function renderBracket(league) {
 }
   saveData();
   renderBracket(league);
-}
 
 document.addEventListener("click", e => {
   if (!e.target.classList.contains("save-bracket-result")) return;
