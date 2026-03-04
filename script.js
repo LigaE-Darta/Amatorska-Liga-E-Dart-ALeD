@@ -983,7 +983,6 @@ if (closeBracketModalBtn) {
     document.getElementById("bracket-modal").classList.add("hidden");
   });
 }
-  document.getElementById("bracket-modal").classList.add("hidden");
 
 function createBracket(size) {
   const league = getLeagueById(currentLeagueId);
