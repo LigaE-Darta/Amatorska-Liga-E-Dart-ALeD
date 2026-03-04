@@ -977,7 +977,12 @@ document.addEventListener("click", e => {
     document.getElementById("bracket-modal").classList.add("hidden");
   }
 });
-document.getElementById("close-bracket-modal").addEventListener("click", () => {
+const closeBracketModalBtn = document.getElementById("close-bracket-modal");
+if (closeBracketModalBtn) {
+  closeBracketModalBtn.addEventListener("click", () => {
+    document.getElementById("bracket-modal").classList.add("hidden");
+  });
+}
   document.getElementById("bracket-modal").classList.add("hidden");
 });
 
