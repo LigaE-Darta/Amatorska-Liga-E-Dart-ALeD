@@ -937,7 +937,7 @@ renderHistory(league);
 });
 renderLeagues();
 
-const showBracketBtn = document.getElementById("show-bracket");
+const showBracketBtn = document.getElementById("show-bracket-btn");
 if (showBracketBtn) {
   showBracketBtn.addEventListener("click", () => {
     const league = getLeagueById(currentLeagueId);
