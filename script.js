@@ -7,6 +7,16 @@ function loadData() {
   const saved = localStorage.getItem("aled-data");
   if (saved) {
     data = JSON.parse(saved);
+
+    // ⭐ DODAJEMY BRAKUJĄCE POLE DO STARYCH LIG
+    data.leagues.forEach(league => {
+      if (league.bracket === undefined) {
+        league.bracket = null;
+      }
+    });
+
+  } else {
+    data = { leagues: [] };
   }
 }
 // 1. Najpierw deklaracja danych
@@ -166,6 +176,7 @@ leagueForm.addEventListener('submit', e => {
     relegationSpots: relegation,
     players: [],
     matches: []
+    bracket: null
   });
 
   leagueNameInput.value = '';
