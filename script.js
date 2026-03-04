@@ -725,6 +725,19 @@ function renderHistory(league) {
       container.appendChild(div);
     });
 }
+function renderBracket(league) {
+  const container = document.getElementById("bracket-container");
+  container.innerHTML = "";
+
+  if (!league.bracket) {
+    container.innerHTML = `
+      <button id="create-bracket-btn">Utwórz drabinkę</button>
+    `;
+    return;
+  }
+
+  // Tu później wyświetlimy drabinkę
+}
 function getPlayerForm(playerId, league) {
   const playedMatches = league.matches
     .filter(m =>
@@ -832,3 +845,20 @@ renderHistory(league);
   alert("Terminarz wygenerowany!");
 });
 renderLeagues();
+document.getElementById("show-bracket").addEventListener("click", () => {
+  const league = getLeagueById(currentLeagueId);
+  renderBracket(league);
+
+  document.getElementById("bracket-section").scrollIntoView({
+    behavior: "smooth"
+  });
+});
+document.addEventListener("click", e => {
+  if (e.target && e.target.id === "create-bracket-btn") {
+    openBracketSetup();
+  }
+});
+
+function openBracketSetup() {
+  alert("Tu zrobimy wybór liczby uczestników drabinki.");
+}
