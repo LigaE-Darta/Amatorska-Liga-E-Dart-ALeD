@@ -735,6 +735,97 @@ function renderBracket(league) {
     `;
     return;
   }
+let html = "";
+
+const rounds = league.bracket.rounds;
+const roundNumbers = Object.keys(rounds).map(n => parseInt(n)).sort((a, b) => a - b);
+
+roundNumbers.forEach(roundNum => {
+  const matches = rounds[roundNum];
+
+  html += `<h4>Runda ${roundNum}</h4>`;
+
+  matches.forEach((m, index) => {
+    const playerA = league.players.find(p => p.id === m.playerAId);
+    const playerB = league.players.find(p => p.id === m.playerBId);
+
+    const finished = m.scoreA !== null && m.scoreB !== null;
+
+    html += `
+      <div class="bracket-match">
+        <h5>${playerA.name} vs ${playerB.name}</h5>
+    `;
+
+    if (!finished) {
+      // formularz do wpisania wyniku
+      html += `
+        <div class="bracket-inputs">
+          <label>Legi ${playerA.name}:
+            <input type="number" class="bracket-scoreA" data-match="${index}" data-round="${roundNum}" min="0">
+          </label>
+
+          <label>Legi ${playerB.name}:
+            <input type="number" class="bracket-scoreB" data-match="${index}" data-round="${roundNum}" min="0">
+          </label>
+        </div>
+
+        <div class="bracket-stats">
+          <fieldset>
+            <legend>${playerA.name} – statystyki</legend>
+            <label>Średnia 3-lotek:
+              <input type="number" class="bracket-avgA" data-match="${index}" data-round="${roundNum}" step="0.01">
+            </label>
+            <label>Najlepszy leg:
+              <input type="number" class="bracket-bestLegA" data-match="${index}" data-round="${roundNum}">
+            </label>
+            <label>Najlepszy checkout:
+              <input type="number" class="bracket-checkoutA" data-match="${index}" data-round="${roundNum}">
+            </label>
+            <label>Maxy:
+              <input type="number" class="bracket-maxA" data-match="${index}" data-round="${roundNum}">
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>${playerB.name} – statystyki</legend>
+            <label>Średnia 3-lotek:
+              <input type="number" class="bracket-avgB" data-match="${index}" data-round="${roundNum}" step="0.01">
+            </label>
+            <label>Najlepszy leg:
+              <input type="number" class="bracket-bestLegB" data-match="${index}" data-round="${roundNum}">
+            </label>
+            <label>Najlepszy checkout:
+              <input type="number" class="bracket-checkoutB" data-match="${index}" data-round="${roundNum}">
+            </label>
+            <label>Maxy:
+              <input type="number" class="bracket-maxB" data-match="${index}" data-round="${roundNum}">
+            </label>
+          </fieldset>
+        </div>
+
+        <button class="save-bracket-result" data-match="${index}" data-round="${roundNum}">
+          Zapisz wynik
+        </button>
+      `;
+    } else {
+      // mecz zakończony — pokazujemy wynik
+      html += `
+        <p><strong>Wynik:</strong> ${m.scoreA} : ${m.scoreB}</p>
+        <p>Zwycięzca: <strong>${league.players.find(p => p.id === m.winnerId).name}</strong></p>
+      `;
+    }
+
+    html += `</div>`;
+  });
+});
+
+// jeśli mamy mistrza
+if (league.bracket.championId) {
+  const champ = league.players.find(p => p.id === league.bracket.championId);
+  html += `<h3>Mistrz turnieju: ${champ.name}</h3>`;
+}
+
+container.innerHTML = html;
 
   // Tu później wyświetlimy drabinkę
 }
@@ -860,5 +951,150 @@ document.addEventListener("click", e => {
 });
 
 function openBracketSetup() {
-  alert("Tu zrobimy wybór liczby uczestników drabinki.");
+  const league = getLeagueById(currentLeagueId);
+  const modal = document.getElementById("bracket-modal");
+  const optionsContainer = document.getElementById("bracket-size-options");
+
+  const playerCount = league.players.length;
+  const sizes = [2, 4, 8, 16, 32, 64, 128];
+
+  const availableSizes = sizes.filter(s => s <= playerCount);
+
+  optionsContainer.innerHTML = availableSizes
+    .map(size => `<button class="bracket-size-btn" data-size="${size}">${size} zawodników</button>`)
+    .join("");
+
+  modal.classList.remove("hidden");
 }
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("bracket-size-btn")) {
+    const size = parseInt(e.target.dataset.size);
+    createBracket(size);
+    document.getElementById("bracket-modal").classList.add("hidden");
+  }
+});
+document.getElementById("close-bracket-modal").addEventListener("click", () => {
+  document.getElementById("bracket-modal").classList.add("hidden");
+});
+
+function createBracket(size) {
+  const league = getLeagueById(currentLeagueId);
+
+  // kopiujemy zawodników
+  let players = [...league.players];
+
+  // tasowanie (Fisher-Yates)
+  for (let i = players.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [players[i], players[j]] = [players[j], players[i]];
+  }
+
+  // bierzemy tylko tylu, ile wybrano
+  players = players.slice(0, size);
+
+  // tworzymy pary
+  const matches = [];
+  for (let i = 0; i < size; i += 2) {
+    matches.push({
+      playerAId: players[i].id,
+      playerBId: players[i + 1].id,
+      scoreA: null,
+      scoreB: null,
+      round: 1
+    });
+  }
+
+  league.bracket = {
+    size,
+    rounds: {
+      1: matches
+    }
+  };
+
+  saveData();
+  renderBracket(league);
+}
+
+document.addEventListener("click", e => {
+  if (!e.target.classList.contains("save-bracket-result")) return;
+
+  const index = parseInt(e.target.dataset.match);
+  const league = getLeagueById(currentLeagueId);
+  const match = league.bracket.rounds[1][index];
+
+  // Pobieramy dane z formularza
+  const scoreA = parseInt(document.querySelector(`.bracket-scoreA[data-match="${index}"]`).value);
+  const scoreB = parseInt(document.querySelector(`.bracket-scoreB[data-match="${index}"]`).value);
+
+  const avgA = parseFloat(document.querySelector(`.bracket-avgA[data-match="${index}"]`).value);
+  const avgB = parseFloat(document.querySelector(`.bracket-avgB[data-match="${index}"]`).value);
+
+  const bestLegA = parseInt(document.querySelector(`.bracket-bestLegA[data-match="${index}"]`).value);
+  const bestLegB = parseInt(document.querySelector(`.bracket-bestLegB[data-match="${index}"]`).value);
+
+  const checkoutA = parseInt(document.querySelector(`.bracket-checkoutA[data-match="${index}"]`).value);
+  const checkoutB = parseInt(document.querySelector(`.bracket-checkoutB[data-match="${index}"]`).value);
+
+  const maxA = parseInt(document.querySelector(`.bracket-maxA[data-match="${index}"]`).value);
+  const maxB = parseInt(document.querySelector(`.bracket-maxB[data-match="${index}"]`).value);
+
+  // Zapisujemy do obiektu meczu
+  match.scoreA = scoreA;
+  match.scoreB = scoreB;
+
+  match.statsA = { avgA, bestLegA, checkoutA, maxA };
+  match.statsB = { avgB, bestLegB, checkoutB, maxB };
+
+  saveData();
+  alert("Wynik zapisany!");
+    // Ustalamy zwycięzcę
+  let winnerId = null;
+  if (scoreA > scoreB) winnerId = match.playerAId;
+  if (scoreB > scoreA) winnerId = match.playerBId;
+
+  match.winnerId = winnerId;
+
+  // Sprawdzamy, czy wszystkie mecze rundy są już uzupełnione
+  const roundNumber = match.round || 1;
+  const currentRound = league.bracket.rounds[roundNumber];
+
+  const allFinished = currentRound.every(m => m.scoreA !== null && m.scoreB !== null);
+
+  if (!allFinished) {
+    saveData();
+    renderBracket(league);
+    return;
+  }
+
+  // Jeśli wszystkie mecze są gotowe → generujemy kolejną rundę
+  const winners = currentRound.map(m => m.winnerId);
+
+  if (winners.length === 1) {
+    // mamy zwycięzcę całego turnieju
+    league.bracket.championId = winners[0];
+    saveData();
+    renderBracket(league);
+    return;
+  }
+
+  // Tworzymy kolejną rundę
+  const nextRoundNumber = roundNumber + 1;
+  const nextMatches = [];
+
+  for (let i = 0; i < winners.length; i += 2) {
+    nextMatches.push({
+      playerAId: winners[i],
+      playerBId: winners[i + 1],
+      scoreA: null,
+      scoreB: null,
+      round: nextRoundNumber
+    });
+  }
+
+  league.bracket.rounds[nextRoundNumber] = nextMatches;
+
+  saveData();
+  renderBracket(league);
+
+  // W kolejnym kroku: automatyczne przejście zwycięzcy
+});
