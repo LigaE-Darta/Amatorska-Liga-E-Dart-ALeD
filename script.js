@@ -175,7 +175,7 @@ leagueForm.addEventListener('submit', e => {
     promotionSpots: promotion,
     relegationSpots: relegation,
     players: [],
-    matches: []
+    matches: [],
     bracket: null
   });
 
