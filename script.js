@@ -936,14 +936,18 @@ renderHistory(league);
   alert("Terminarz wygenerowany!");
 });
 renderLeagues();
-document.getElementById("show-bracket").addEventListener("click", () => {
-  const league = getLeagueById(currentLeagueId);
-  renderBracket(league);
 
-  document.getElementById("bracket-section").scrollIntoView({
-    behavior: "smooth"
+const showBracketBtn = document.getElementById("show-bracket");
+if (showBracketBtn) {
+  showBracketBtn.addEventListener("click", () => {
+    const league = getLeagueById(currentLeagueId);
+    renderBracket(league);
+
+    document.getElementById("bracket-section").scrollIntoView({
+      behavior: "smooth"
+    });
   });
-});
+}
 document.addEventListener("click", e => {
   if (e.target && e.target.id === "create-bracket-btn") {
     openBracketSetup();
