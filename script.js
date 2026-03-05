@@ -1102,3 +1102,4 @@ document.addEventListener("click", e => {
   renderBracket(league);
 
   // W kolejnym kroku: automatyczne przejście zwycięzcy
+} );
