@@ -187,7 +187,7 @@ const leagueIdFromUrl = urlParams.get("league");
 if (leagueIdFromUrl && getLeagueById(leagueIdFromUrl)) {
     openLeague(leagueIdFromUrl);
 }
-
+if (playerForm) {
 playerForm.addEventListener('submit', e => {
   e.preventDefault();
   const name = playerNameInput.value.trim();
@@ -204,7 +204,7 @@ playerForm.addEventListener('submit', e => {
   renderMatchPlayersSelects();
   renderTable();
 });
-
+}
 function renderPlayers() {
   playersList.innerHTML = '';
   const league = getLeagueById(currentLeagueId);
