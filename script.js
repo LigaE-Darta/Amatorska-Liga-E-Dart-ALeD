@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 console.log("START JS");
+  function getLeagueById(id) {
+  return data.leagues.find(l => l.id === id);
+}
 
 function saveData() {
   localStorage.setItem("aled-data", JSON.stringify(data));
@@ -88,9 +91,6 @@ const maxesBInput = document.getElementById('maxes-b');
 
 const matchesList = document.getElementById('matches-list');
 
-function getLeagueById(id) {
-  return data.leagues.find(l => l.id === id);
-}
 function deleteLeague(id) {
   data.leagues = data.leagues.filter(l => l.id !== id);
   saveData();
