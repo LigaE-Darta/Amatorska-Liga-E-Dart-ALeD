@@ -942,9 +942,8 @@ const showBracketBtn = document.getElementById("show-bracket-btn");
 console.log("BTN:", showBracketBtn);
 if (showBracketBtn) {
 showBracketBtn.addEventListener("click", () => {
-  console.log("Klik działa!");
-  openBracketSetup();
-}); 
+  window.open("bracket.html?leagueId=" + currentLeagueId, "_blank");
+});
 }
 document.addEventListener("click", e => {
   if (e.target && e.target.id === "create-bracket-btn") {
