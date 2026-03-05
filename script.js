@@ -1,9 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
 console.log("START JS");
   function getLeagueById(id) {
   return data.leagues.find(l => l.id === id);
 }
-
+let data = JSON.parse(localStorage.getItem("aled-data")) || { leagues: [] };
 function saveData() {
   localStorage.setItem("aled-data", JSON.stringify(data));
 }
@@ -23,22 +22,9 @@ function loadData() {
     data = { leagues: [] };
   }
 }
-// 1. Najpierw deklaracja danych
-let data = JSON.parse(localStorage.getItem('aled-data')) || {
-  leagues: []
-};
 
-// 2. Funkcje zapisu/odczytu
-function saveData() {
-  localStorage.setItem("aled-data", JSON.stringify(data));
-}
 
-function loadData() {
-  const saved = localStorage.getItem("aled-data");
-  if (saved) {
-    data = JSON.parse(saved);
-  }
-}
+document.addEventListener("DOMContentLoaded", () => {
 
 // 3. Dopiero teraz wywołanie
 loadData();
