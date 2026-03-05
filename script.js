@@ -956,55 +956,67 @@ document.addEventListener("click", e => {
 
 function openBracketSetup() {
   const league = getLeagueById(currentLeagueId);
+  if (!league) return;
+
   const modal = document.getElementById("bracket-modal");
-  const optionsContainer = document.getElementById("bracket-size-options");
+  const list = document.getElementById("bracket-player-list");
 
-  const playerCount = league.players.length;
-  const sizes = [2, 4, 8, 16, 32, 64, 128];
+  list.innerHTML = "";
 
-  const availableSizes = sizes.filter(s => s <= playerCount);
-
-  optionsContainer.innerHTML = availableSizes
-    .map(size => `<button class="bracket-size-btn" data-size="${size}">${size} zawodników</button>`)
-    .join("");
+  league.players.forEach(player => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <label>
+        <input type="checkbox" class="bracket-player-checkbox" value="${player.id}">
+        ${player.name}
+      </label>
+    `;
+    list.appendChild(div);
+  });
 
   modal.classList.remove("hidden");
 }
-document.addEventListener("click", e => {
-  if (e.target.classList.contains("bracket-size-btn")) {
-    const size = parseInt(e.target.dataset.size);
-    createBracket(size);
-    document.getElementById("bracket-modal").classList.add("hidden");
-  }
-});
+
 const closeBracketModalBtn = document.getElementById("close-bracket-modal");
 if (closeBracketModalBtn) {
   closeBracketModalBtn.addEventListener("click", () => {
     document.getElementById("bracket-modal").classList.add("hidden");
   });
 }
+const generateBracketBtn = document.getElementById("generate-bracket-btn");
+if (generateBracketBtn) {
+  generateBracketBtn.addEventListener("click", () => {
+    const league = getLeagueById(currentLeagueId);
+    if (!league) return;
 
-function createBracket(size) {
+    const checkboxes = document.querySelectorAll(".bracket-player-checkbox:checked");
+    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+    if (![2, 4, 8, 16, 32].includes(selectedIds.length)) {
+      alert("Liczba zawodników w drabince musi być: 2, 4, 8, 16 lub 32.");
+      return;
+    }
+
+    createBracketFromSelection(selectedIds);
+
+    document.getElementById("bracket-modal").classList.add("hidden");
+
+    renderBracket(league);
+    document.getElementById("bracket-section").classList.remove("hidden");
+  });
+}
+function createBracketFromSelection(selectedIds) {
   const league = getLeagueById(currentLeagueId);
+  if (!league) return;
 
-  // kopiujemy zawodników
-  let players = [...league.players];
+  const size = selectedIds.length;
 
-  // tasowanie (Fisher-Yates)
-  for (let i = players.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [players[i], players[j]] = [players[j], players[i]];
-  }
-
-  // bierzemy tylko tylu, ile wybrano
-  players = players.slice(0, size);
-
-  // tworzymy pary
+  // tworzymy pary w kolejności zaznaczenia
   const matches = [];
   for (let i = 0; i < size; i += 2) {
     matches.push({
-      playerAId: players[i].id,
-      playerBId: players[i + 1].id,
+      playerAId: selectedIds[i],
+      playerBId: selectedIds[i + 1],
       scoreA: null,
       scoreB: null,
       round: 1
@@ -1017,6 +1029,8 @@ function createBracket(size) {
       1: matches
     }
   };
+
+  saveData();
 }
 
 document.addEventListener("click", e => {
