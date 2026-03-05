@@ -146,14 +146,15 @@ backToLeaguesBtn.addEventListener('click', () => {
   leagueView.classList.add('hidden');
   leaguesSection.classList.remove('hidden');
 });
+if (leagueForm) {
+  leagueForm.addEventListener('submit', e => {
+    e.preventDefault();
+    console.log("SUBMIT DZIAŁA");
+    const name = leagueNameInput.value.trim();
+    if (!name) return;
+    const promotion = parseInt(leaguePromotionInput.value) || 0;
+    const relegation = parseInt(leagueRelegationInput.value) || 0;
 
-leagueForm.addEventListener('submit', e => {
-  e.preventDefault();
-  console.log("SUBMIT DZIAŁA");
-  const name = leagueNameInput.value.trim();
-  if (!name) return;
-  const promotion = parseInt(leaguePromotionInput.value) || 0;
-  const relegation = parseInt(leagueRelegationInput.value) || 0;
 
   const id = 'league-' + Date.now();
 
