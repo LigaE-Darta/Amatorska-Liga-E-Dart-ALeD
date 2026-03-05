@@ -3,9 +3,7 @@ console.log("START JS");
   return data.leagues.find(l => l.id === id);
 }
 let data = JSON.parse(localStorage.getItem("aled-data")) || { leagues: [] };
-function saveData() {
-  localStorage.setItem("aled-data", JSON.stringify(data));
-}
+
 function loadData() {
   const saved = localStorage.getItem("aled-data");
   if (saved) {
@@ -32,10 +30,6 @@ loadData();
 console.log("POBRANO FORMULARZ:", document.getElementById("league-form"));
 
 let currentLeagueId = null;
-
-function saveData() {
-  localStorage.setItem('aled-data', JSON.stringify(data));
-}
 
 const leaguesSection = document.getElementById('leagues-section');
 const leaguesList = document.getElementById('leagues-list');
