@@ -1018,44 +1018,6 @@ function createBracket(size) {
     }
   };
 }
-function renderBracket(league) {
-  const container = document.getElementById("bracket-container");
-  const bracketSection = document.getElementById("bracket-section");
-
-  if (!league.bracket) {
-    container.innerHTML = "<p>Brak drabinki. Utwórz ją najpierw.</p>";
-    bracketSection.classList.remove("hidden");
-    return;
-  }
-
-  const rounds = league.bracket.rounds;
-  let html = "";
-
-  for (const round in rounds) {
-    html += `<h4>Runda ${round}</h4>`;
-    html += `<div class="bracket-round">`;
-
-    rounds[round].forEach(match => {
-      const playerA = league.players.find(p => p.id === match.playerAId)?.name || "TBD";
-      const playerB = league.players.find(p => p.id === match.playerBId)?.name || "TBD";
-
-      html += `
-        <div class="bracket-match">
-          <span>${playerA}</span>
-          <span>vs</span>
-          <span>${playerB}</span>
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-  }
-
-  container.innerHTML = html;
-  bracketSection.classList.remove("hidden");
-}
-  saveData();
-  renderBracket(league);
 
 document.addEventListener("click", e => {
   if (!e.target.classList.contains("save-bracket-result")) return;
