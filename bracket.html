@@ -120,7 +120,7 @@
     const leagueId = params.get("league");
 
     if (leagueId) {
-      const league = getLeagueById(leagueId);
+      const league = getLeagueById(league);
       renderBracket(league, "bracket-container");
     } else {
       document.getElementById("bracket-container").innerHTML = "<p>Brak ligi. Tryb standalone w budowie.</p>";
