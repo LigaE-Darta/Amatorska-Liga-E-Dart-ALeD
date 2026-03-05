@@ -939,16 +939,12 @@ renderHistory(league);
 renderLeagues();
 
 const showBracketBtn = document.getElementById("show-bracket-btn");
-console.log("showBracketBtn =", showBracketBtn);
+console.log("BTN:", showBracketBtn);
 if (showBracketBtn) {
-  showBracketBtn.addEventListener("click", () => {
-    const league = getLeagueById(currentLeagueId);
-    renderBracket(league);
-
-    document.getElementById("bracket-section").scrollIntoView({
-      behavior: "smooth"
-    });
-  });
+showBracketBtn.addEventListener("click", () => {
+  console.log("Klik działa!");
+  openBracketSetup();
+}); 
 }
 document.addEventListener("click", e => {
   if (e.target && e.target.id === "create-bracket-btn") {
