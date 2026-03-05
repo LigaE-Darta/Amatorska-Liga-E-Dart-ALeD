@@ -141,11 +141,13 @@ renderHistory(league);
   renderSeasonStats();
 }
 
-backToLeaguesBtn.addEventListener('click', () => {
-  currentLeagueId = null;
-  leagueView.classList.add('hidden');
-  leaguesSection.classList.remove('hidden');
-});
+if (backToLeaguesBtn) {
+  backToLeaguesBtn.addEventListener('click', () => {
+    currentLeagueId = null;
+    leagueView.classList.add('hidden');
+    leaguesSection.classList.remove('hidden');
+  });
+}
 if (leagueForm) {
   leagueForm.addEventListener('submit', e => {
     e.preventDefault();
