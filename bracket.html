@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Drabinka turniejowa</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    #bracket-container {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .round {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .match {
+      background: #222;
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid #333;
+      transition: 0.2s;
+    }
+
+    .match:hover {
+      background: #333;
+    }
+
+    /* Modal */
+    #match-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #match-modal .modal-content {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+    }
+
+    #match-modal input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    #close-modal {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      background: #444;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Drabinka turniejowa</h1>
+
+  <div id="bracket-container"></div>
+
+  <!-- Modal -->
+  <div id="match-modal">
+    <div class="modal-content">
+      <h2>Statystyki meczu</h2>
+
+      <input id="scoreA" placeholder="Wynik A">
+      <input id="scoreB" placeholder="Wynik B">
+
+      <input id="avgA" placeholder="Średnia A">
+      <input id="avgB" placeholder="Średnia B">
+
+      <input id="bestLegA" placeholder="Najlepszy leg A">
+      <input id="bestLegB" placeholder="Najlepszy leg B">
+
+      <input id="checkoutA" placeholder="Checkout A">
+      <input id="checkoutB" placeholder="Checkout B">
+
+      <input id="maxA" placeholder="Maxy A">
+      <input id="maxB" placeholder="Maxy B">
+
+      <button id="save-match">Zapisz</button>
+      <button id="close-modal">Zamknij</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const leagueId = params.get("leagueId");
+
+    if (leagueId) {
+      const league = getLeagueById(leagueId);
+      renderBracket(league, "bracket-container");
+    } else {
+      document.getElementById("bracket-container").innerHTML = "<p>Brak ligi. Tryb standalone w budowie.</p>";
+    }
+  </script>
+
+</body>
+</html>
