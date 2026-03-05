@@ -1,7 +1,4 @@
 console.log("START JS");
-  function getLeagueById(id) {
-  return data.leagues.find(l => l.id === id);
-}
 let data = JSON.parse(localStorage.getItem("aled-data")) || { leagues: [] };
 
 function loadData() {
@@ -20,7 +17,9 @@ function loadData() {
     data = { leagues: [] };
   }
 }
-
+ function getLeagueById(id) {
+  return data.leagues.find(l => l.id === id);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 
