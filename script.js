@@ -177,6 +177,7 @@ if (leagueForm) {
   saveData();
   renderLeagues();
 });
+}
 // 🔥 Auto‑otwieranie ligi z URL
 const params = new URLSearchParams(window.location.search);
 IdFromUrl = params.get("league");
@@ -1102,5 +1103,5 @@ document.addEventListener("click", e => {
   renderBracket(league);
 
   // W kolejnym kroku: automatyczne przejście zwycięzcy
-}); 
+});
 });
