@@ -1,12 +1,19 @@
 console.log("START JS");
+
+// GLOBALNE DANE
 let data = JSON.parse(localStorage.getItem("aled-data")) || { leagues: [] };
+
+// GLOBALNE FUNKCJE
+function saveData() {
+  localStorage.setItem("aled-data", JSON.stringify(data));
+}
 
 function loadData() {
   const saved = localStorage.getItem("aled-data");
   if (saved) {
     data = JSON.parse(saved);
 
-    // ⭐ DODAJEMY BRAKUJĄCE POLE DO STARYCH LIG
+    // Dodajemy brakujące pole do starych lig
     data.leagues.forEach(league => {
       if (league.bracket === undefined) {
         league.bracket = null;
@@ -17,7 +24,8 @@ function loadData() {
     data = { leagues: [] };
   }
 }
- function getLeagueById(id) {
+
+function getLeagueById(id) {
   return data.leagues.find(l => l.id === id);
 }
 
