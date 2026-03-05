@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", () => {
 console.log("START JS");
 
 function saveData() {
