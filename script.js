@@ -176,7 +176,7 @@ if (leagueForm) {
 
   saveData();
   renderLeagues();
-});
+  });
 }
 // 🔥 Auto‑otwieranie ligi z URL
 const params = new URLSearchParams(window.location.search);
