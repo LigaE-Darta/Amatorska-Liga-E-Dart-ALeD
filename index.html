@@ -45,8 +45,8 @@
         </form>
         <ul id="players-list"></ul>
       </section>
+
       <button id="generate-schedule-btn">Generuj terminarz</button>
-      <button id="show-bracket-btn">Drabinka</button>
 
       <!-- TABELA LIGI -->
       <section>
@@ -64,7 +64,7 @@
               <th>Punkty</th>
               <th>Śr. 3-lotek</th>
               <th>Maxy</th>
-              <th>A</th> <!-- anulowane -->
+              <th>A</th>
               <th>Forma</th>
             </tr>
           </thead>
@@ -73,10 +73,10 @@
       </section>
 
       <!-- STATYSTYKI SEZONU -->
-<section>
-  <h3>Statystyki sezonu</h3>
-  <ul id="season-stats"></ul>
-</section>
+      <section>
+        <h3>Statystyki sezonu</h3>
+        <ul id="season-stats"></ul>
+      </section>
 
       <!-- DODAWANIE MECZU -->
       <section>
@@ -111,7 +111,7 @@
               <label>Średnia 3-lotek:
                 <input type="number" id="avg-a" step="0.01" min="0">
               </label>
-              <label>Najlepszy leg (liczba lotek):
+              <label>Najlepszy leg:
                 <input type="number" id="best-leg-a" min="0">
               </label>
               <label>Najlepszy checkout:
@@ -120,7 +120,7 @@
               <label>Najwyższy wynik:
                 <input type="number" id="highest-score-a" min="0">
               </label>
-              <label>Liczba maksów (180):
+              <label>Liczba maksów:
                 <input type="number" id="maxes-a" min="0" value="0">
               </label>
             </fieldset>
@@ -130,7 +130,7 @@
               <label>Średnia 3-lotek:
                 <input type="number" id="avg-b" step="0.01" min="0">
               </label>
-              <label>Najlepszy leg (liczba lotek):
+              <label>Najlepszy leg:
                 <input type="number" id="best-leg-b" min="0">
               </label>
               <label>Najlepszy checkout:
@@ -139,49 +139,34 @@
               <label>Najwyższy wynik:
                 <input type="number" id="highest-score-b" min="0">
               </label>
-              <label>Liczba maksów (180):
+              <label>Liczba maksów:
                 <input type="number" id="maxes-b" min="0" value="0">
               </label>
             </fieldset>
           </div>
 
-          <label>Powód anulowania (opcjonalnie):
+          <label>Powód anulowania:
             <input type="text" id="cancel-reason" placeholder="np. brak stawienia się">
           </label>
 
           <button type="submit">Zapisz mecz</button>
         </form>
       </section>
-      <!-- TERMINARZ -->
-<section>
-  <h3>Terminarz</h3>
-  <div id="schedule"></div>
-</section>
 
- <!-- DRABINKA -->
-<section id="bracket-section" class="hidden">
-  <h3>Drabinka</h3>
-  <div id="bracket-container"></div>
-</section>     
+      <!-- TERMINARZ -->
+      <section>
+        <h3>Terminarz</h3>
+        <div id="schedule"></div>
+      </section>
 
       <!-- HISTORIA MECZÓW -->
-       <section>
-  <h3>Historia meczów</h3>
-  <div id="history"></div>
-</section>
+      <section>
+        <h3>Historia meczów</h3>
+        <div id="history"></div>
+      </section>
 
     </section>
   </main>
-  
-<!-- MODAL DRABINKI -->
-  <div id="bracket-modal" class="hidden">
-    <div class="modal-content">
-      <h3>Wybierz zawodników do drabinki</h3>
-      <div id="bracket-player-list"></div>
-      <button id="generate-bracket-btn">Generuj drabinkę</button>
-      <button id="close-bracket-modal">Zamknij</button>
-    </div>
-  </div>
 
   <script src="script.js"></script>
 </body>
