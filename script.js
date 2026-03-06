@@ -232,11 +232,12 @@ function renderMatchPlayersSelects() {
   });
 }
 
-matchCancelledCheckbox.addEventListener('change', () => {
+if (matchCancelledCheckbox) {
+  matchCancelledCheckbox.addEventListener('change', () => {
   const cancelled = matchCancelledCheckbox.checked;
   statsBlocks.style.display = cancelled ? 'none' : 'grid';
 });
-
+}
 matchForm.addEventListener('submit', e => {
   e.preventDefault();
   const league = getLeagueById(currentLeagueId);
