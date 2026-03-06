@@ -1106,4 +1106,3 @@ document.addEventListener("click", e => {
 
   // W kolejnym kroku: automatyczne przejście zwycięzcy
 });
-});
