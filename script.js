@@ -238,7 +238,8 @@ if (matchCancelledCheckbox) {
   statsBlocks.style.display = cancelled ? 'none' : 'grid';
 });
 }
-matchForm.addEventListener('submit', e => {
+if (matchForm) {
+  matchForm.addEventListener('submit', e => {
   e.preventDefault();
   const league = getLeagueById(currentLeagueId);
   if (!league) return;
