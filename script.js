@@ -821,7 +821,7 @@ renderHistory(league);
 });
 renderLeagues();
 async function testSupabase() {
-  const { data, error } = await supabase.from("leagues").select("*");
+  const { data, error } = await db.from("leagues").select("*");
   console.log("TEST SUPABASE:", data, error);
 }
 
