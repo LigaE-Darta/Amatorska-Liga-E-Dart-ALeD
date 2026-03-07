@@ -31,7 +31,7 @@ console.log("POBRANO FORMULARZ:", document.getElementById("league-form"));
 let currentLeagueId = null;
 
 const leaguesSection = document.getElementById('leagues-section');
-const leaguesList = document.getElementById('league-list');
+const leaguesList = document.getElementById('leagues-list');
 const leagueForm = document.getElementById('league-form');
 
 const backToLeaguesBtn = document.getElementById('back-to-leagues');
