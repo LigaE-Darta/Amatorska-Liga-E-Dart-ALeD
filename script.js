@@ -1,6 +1,6 @@
-const supabase = supabase.createClient(
-  "https://TWÓJ-PROJEKT.supabase.co",
-  "TWÓJ_PUBLIC_ANON_KEY"
+const db = supabase.createClient(
+  "https://remzodwyaphafjqjmhqh.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlbXpvZHd5YXBoYWZqcWptaHFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4ODI2MTMsImV4cCI6MjA4NzQ1ODYxM30.djEkg6wxpMDMcOqy-YZtI8SJ_I61qqYkrVCTtn-eLDA"
 );
 console.log("START JS");
 
