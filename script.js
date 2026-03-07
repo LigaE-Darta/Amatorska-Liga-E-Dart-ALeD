@@ -211,16 +211,37 @@ playerForm.addEventListener('submit', e => {
   const name = playerNameInput.value.trim();
   if (!name || !currentLeagueId) return;
   const league = getLeagueById(currentLeagueId);
-  league.players.push({
-    id: 'p-' + Date.now() + '-' + league.players.length,
-    name
+// Generujemy ID zawodnika
+const playerId = 'p-' + Date.now() + '-' + league.players.length;
+
+// 1. Zapis lokalny (żeby UI działało od razu)
+league.players.push({
+  id: playerId,
+  name
+});
+
+// 2. Zapis do Supabase
+db.from("players")
+  .insert({
+    id: playerId,
+    league_id: currentLeagueId,
+    name: name
+  })
+  .then(({ error }) => {
+    if (error) {
+      console.error("Błąd zapisu zawodnika do Supabase:", error);
+    } else {
+      console.log("Zawodnik zapisany do Supabase!");
+    }
   });
-  playerNameInput.value = '';
-  saveData();
-  renderSchedule(league);
-  renderPlayers();
-  renderMatchPlayersSelects();
-  renderTable();
+
+// 3. Reset formularza + odświeżenie UI
+playerNameInput.value = '';
+saveData();
+renderSchedule(league);
+renderPlayers();
+renderMatchPlayersSelects();
+renderTable(); 
 });
 }
 function renderPlayers() {
