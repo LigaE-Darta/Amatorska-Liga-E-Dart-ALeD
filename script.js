@@ -159,91 +159,50 @@ if (leagueForm) {
   leagueForm.addEventListener('submit', e => {
     e.preventDefault();
     console.log("SUBMIT DZIAŁA");
+
     const name = leagueNameInput.value.trim();
     if (!name) return;
+
     const promotion = parseInt(leaguePromotionInput.value) || 0;
     const relegation = parseInt(leagueRelegationInput.value) || 0;
 
+    // 🔥 Generujemy UUID dla ligi
+    const id = crypto.randomUUID();
 
-  const id = 'league-' + Date.now();
+    // 1. Zapis lokalny
+    data.leagues.push({
+      id,
+      name,
+      promotionSpots: promotion,
+      relegationSpots: relegation,
+      players: [],
+      matches: []
+    });
 
-  data.leagues.push({
-    id,
-    name,
-    promotionSpots: promotion,
-    relegationSpots: relegation,
-    players: [],
-    matches: [],
+    // 2. Zapis do Supabase
+    db.from("leagues")
+      .insert({
+        id,
+        name,
+        promotion_spots: promotion,
+        relegation_spots: relegation
+      })
+      .then(({ error }) => {
+        if (error) {
+          console.error("Błąd zapisu do Supabase:", error);
+        } else {
+          console.log("Liga zapisana do Supabase!");
+        }
+      });
+
+    // 3. Reset formularza + UI
+    leagueNameInput.value = '';
+    leaguePromotionInput.value = 0;
+    leagueRelegationInput.value = 0;
+
+    saveData();
+    renderLeagues();
   });
-
-  // Zapis do Supabase
-db.from("leagues").insert({
-  id,
-  name,
-  promotion_spots: promotion,
-  relegation_spots: relegation
-}).then(({ error }) => {
-  if (error) {
-    console.error("Błąd zapisu do Supabase:", error);
-  } else {
-    console.log("Liga zapisana do Supabase!");
-  }
-});
-  leagueNameInput.value = '';
-  leaguePromotionInput.value = 0;
-  leagueRelegationInput.value = 0;
-
-  saveData();
-  renderLeagues();
-  });
-}
-// 🔥 Auto‑otwieranie ligi z URL
-const params = new URLSearchParams(window.location.search);
-IdFromUrl = params.get("league");
-const urlParams = new URLSearchParams(window.location.search);
-const leagueIdFromUrl = urlParams.get("league");
-
-if (leagueIdFromUrl && getLeagueById(leagueIdFromUrl)) {
-    openLeague(leagueIdFromUrl);
-}
-if (playerForm) {
-playerForm.addEventListener('submit', e => {
-  e.preventDefault();
-  const name = playerNameInput.value.trim();
-  if (!name || !currentLeagueId) return;
-  const league = getLeagueById(currentLeagueId);
-  const playerId = crypto.randomUUID();
-// Generujemy ID zawodnika
-
-// 1. Zapis lokalny (żeby UI działało od razu)
-league.players.push({
-  id: playerId,
-  name
-});
-
-// 2. Zapis do Supabase
-db.from("players")
-  .insert({
-    id: playerId,
-    league_id: currentLeagueId,
-    name: name
-  })
-  .then(({ error }) => {
-    if (error) {
-      console.error("Błąd zapisu zawodnika do Supabase:", error);
-    } else {
-      console.log("Zawodnik zapisany do Supabase!");
-    }
-  });
-
-// 3. Reset formularza + odświeżenie UI
-playerNameInput.value = '';
-saveData();
-renderSchedule(league);
-renderPlayers();
-renderMatchPlayersSelects();
-renderTable(); 
-});
 }
 function renderPlayers() {
   playersList.innerHTML = '';
