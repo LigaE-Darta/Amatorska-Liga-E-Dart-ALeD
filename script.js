@@ -180,13 +180,14 @@ if (leagueForm) {
 db.from("leagues").insert({
   id,
   name,
-  promotionSpots: promotion,
-  relegationSpots: relegation,
-  players: [],
-  matches: []
+  promotion_spots: promotion,
+  relegation_spots: relegation
 }).then(({ error }) => {
-  if (error) console.error("Błąd zapisu do Supabase:", error);
-  else console.log("Liga zapisana do Supabase!");
+  if (error) {
+    console.error("Błąd zapisu do Supabase:", error);
+  } else {
+    console.log("Liga zapisana do Supabase!");
+  }
 });
   leagueNameInput.value = '';
   leaguePromotionInput.value = 0;
