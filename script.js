@@ -792,7 +792,6 @@ function renderSeasonStats() {
       ${stats.mostMaxes || "—"} 
       ${stats.mostMaxesPlayer ? " – " + stats.mostMaxesPlayer : ""}
     </li>
-    <li><strong>Najlepszy zawodnik (punkty):</strong> ${stats.bestPlayerByPoints || "—"}</li>
     <li><strong>Najlepszy zawodnik (średnia):</strong> ${stats.bestPlayerByAvg || "—"}</li>
   `;
 }
