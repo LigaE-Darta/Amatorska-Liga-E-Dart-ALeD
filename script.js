@@ -300,7 +300,7 @@ renderTable();
 renderPlayers();
 renderMatchPlayersSelects();
 });
-
+}
 function calculateLeagueStats(league) {
 
   const statsByPlayer = {};
@@ -817,3 +817,4 @@ renderHistory(league);
   alert("Terminarz wygenerowany!");
 });
 renderLeagues();
+});
