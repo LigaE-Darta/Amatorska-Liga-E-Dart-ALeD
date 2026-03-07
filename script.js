@@ -176,6 +176,18 @@ if (leagueForm) {
     matches: [],
   });
 
+  // Zapis do Supabase
+db.from("leagues").insert({
+  id,
+  name,
+  promotionSpots: promotion,
+  relegationSpots: relegation,
+  players: [],
+  matches: []
+}).then(({ error }) => {
+  if (error) console.error("Błąd zapisu do Supabase:", error);
+  else console.log("Liga zapisana do Supabase!");
+});
   leagueNameInput.value = '';
   leaguePromotionInput.value = 0;
   leagueRelegationInput.value = 0;
