@@ -12,12 +12,24 @@ function saveData() {
   localStorage.setItem("aled-data", JSON.stringify(data));
 }
 
-function loadData() {
-  const saved = localStorage.getItem("aled-data");
-  if (saved) {
-    data = JSON.parse(saved);
+async function loadData() {
+  // 1. Pobierz ligi z Supabase
+  const { data: leagues, error } = await db.from("leagues").select("*");
+
+  if (!error && leagues.length > 0) {
+    // Jeśli są ligi w Supabase → używamy ich
+    data.leagues = leagues;
+    console.log("Pobrano ligi z Supabase:", leagues);
   } else {
-    data = { leagues: [] };
+    // Jeśli baza pusta → używamy localStorage
+    const saved = localStorage.getItem("aled-data");
+    if (saved) {
+      data = JSON.parse(saved);
+      console.log("Pobrano ligi z localStorage:", data);
+    } else {
+      data = { leagues: [] };
+      console.log("Brak danych — pusta struktura");
+    }
   }
 }
 
