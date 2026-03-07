@@ -5,7 +5,7 @@ const db = supabase.createClient(
 console.log("START JS");
 
 // GLOBALNE DANE
-let data = JSON.parse(localStorage.getItem("aled-data")) || { leagues: [] };
+let data = { leagues: [] };
 
 // GLOBALNE FUNKCJE
 function saveData() {
@@ -13,23 +13,14 @@ function saveData() {
 }
 
 async function loadData() {
-  // 1. Pobierz ligi z Supabase
   const { data: leagues, error } = await db.from("leagues").select("*");
 
-  if (!error && leagues.length > 0) {
-    // Jeśli są ligi w Supabase → używamy ich
-    data.leagues = leagues;
+  if (!error) {
+    data.leagues = leagues || [];
     console.log("Pobrano ligi z Supabase:", leagues);
   } else {
-    // Jeśli baza pusta → używamy localStorage
-    const saved = localStorage.getItem("aled-data");
-    if (saved) {
-      data = JSON.parse(saved);
-      console.log("Pobrano ligi z localStorage:", data);
-    } else {
-      data = { leagues: [] };
-      console.log("Brak danych — pusta struktura");
-    }
+    data.leagues = [];
+    console.log("Błąd pobierania z Supabase, ustawiam puste ligi");
   }
 }
 
