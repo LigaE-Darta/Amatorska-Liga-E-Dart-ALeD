@@ -113,15 +113,25 @@ function renderLeagues() {
   });
 }
 
-function openLeague(id) {
+async function openLeague(id) {
 
+  // 1. Pobierz zawodników tej ligi z Supabase
+  const { data: players, error: playersError } = await db
+    .from("players")
+    .select("*")
+    .eq("league_id", id);
+
+  // 2. Pobierz ligę z pamięci
   const league = getLeagueById(id);
   if (!league) {
     console.warn("Liga nie istnieje:", id);
     return;
   }
 
-  // 🔥 Zapisujemy ID ligi w adresie URL
+  // 3. Uzupełnij ligę o zawodników
+  league.players = players || [];
+
+  // 4. Reszta jak wcześniej
   const url = new URL(window.location);
   url.searchParams.set("league", id);
   window.history.replaceState({}, "", url);
@@ -135,9 +145,8 @@ function openLeague(id) {
   renderPlayers();
   renderMatchPlayersSelects();
   renderTable();
- 
-renderSchedule(league);
-renderHistory(league);
+  renderSchedule(league);
+  renderHistory(league);
   renderSeasonStats();
 }
 if (backToLeaguesBtn) {
