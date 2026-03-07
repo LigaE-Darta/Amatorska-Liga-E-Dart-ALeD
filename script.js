@@ -1,3 +1,7 @@
+const supabase = supabase.createClient(
+  "https://TWÓJ-PROJEKT.supabase.co",
+  "TWÓJ_PUBLIC_ANON_KEY"
+);
 console.log("START JS");
 
 // GLOBALNE DANE
@@ -816,4 +820,10 @@ renderHistory(league);
   alert("Terminarz wygenerowany!");
 });
 renderLeagues();
+async function testSupabase() {
+  const { data, error } = await supabase.from("leagues").select("*");
+  console.log("TEST SUPABASE:", data, error);
+}
+
+testSupabase();
 });
