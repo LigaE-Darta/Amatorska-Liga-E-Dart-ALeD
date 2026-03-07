@@ -28,7 +28,8 @@ function getLeagueById(id) {
   return data.leagues.find(l => l.id === id);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadData();
 
 // 3. Dopiero teraz wywołanie
 loadData();
