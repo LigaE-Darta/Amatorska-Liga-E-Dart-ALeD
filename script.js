@@ -178,7 +178,10 @@ if (leagueForm) {
       players: [],
       matches: []
     });
-
+    
+    currentLeagueId = id;
+    openLeague(id);
+    
     // 2. Zapis do Supabase
     db.from("leagues")
       .insert({
