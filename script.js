@@ -132,7 +132,7 @@ renderSchedule(league);
 renderHistory(league);
   renderSeasonStats();
 }
-
+const leaguesList = document.getElementById("league-list");
 if (backToLeaguesBtn) {
   backToLeaguesBtn.addEventListener('click', () => {
     currentLeagueId = null;
