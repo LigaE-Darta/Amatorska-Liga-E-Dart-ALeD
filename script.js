@@ -212,6 +212,7 @@ playerForm.addEventListener('submit', e => {
   const name = playerNameInput.value.trim();
   if (!name || !currentLeagueId) return;
   const league = getLeagueById(currentLeagueId);
+  const playerId = crypto.randomUUID();
 // Generujemy ID zawodnika
 const playerId = 'p-' + Date.now() + '-' + league.players.length;
 
