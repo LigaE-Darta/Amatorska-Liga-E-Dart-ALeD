@@ -8,9 +8,6 @@ console.log("START JS");
 let data = { leagues: [] };
 
 // GLOBALNE FUNKCJE
-function saveData() {
-  localStorage.setItem("aled-data", JSON.stringify(data));
-}
 
 async function loadData() {
   const { data: leagues, error } = await db.from("leagues").select("*");
