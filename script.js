@@ -170,15 +170,13 @@ if (leagueForm) {
     // 🔥 Generujemy UUID dla ligi
     const id = crypto.randomUUID();
 
-    // 1. Zapis lokalny
-    data.leagues.push({
-      id,
-      name,
-      promotionSpots: promotion,
-      relegationSpots: relegation,
-      players: [],
-      matches: []
-    });
+   // 1. Dodaj ligę tylko do Supabase – bez players i matches
+data.leagues.push({
+  id,
+  name,
+  promotionSpots: promotion,
+  relegationSpots: relegation
+});
     
     currentLeagueId = id;
     openLeague(id);
@@ -204,7 +202,6 @@ if (leagueForm) {
     leaguePromotionInput.value = 0;
     leagueRelegationInput.value = 0;
 
-    saveData();
     renderLeagues();
   });
 }
