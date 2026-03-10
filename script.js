@@ -169,19 +169,8 @@ if (leagueForm) {
 
     // 🔥 Generujemy UUID dla ligi
     const id = crypto.randomUUID();
-
-   // 1. Dodaj ligę tylko do Supabase – bez players i matches
-data.leagues.push({
-  id,
-  name,
-  promotionSpots: promotion,
-  relegationSpots: relegation
-});
     
-    currentLeagueId = id;
-    openLeague(id);
-    
-    // 2. Zapis do Supabase
+    // 1. Zapis do Supabase
     db.from("leagues")
       .insert({
         id,
@@ -197,7 +186,7 @@ data.leagues.push({
         }
       });
 
-    // 3. Reset formularza + UI
+    // 2. Reset formularza + UI
     leagueNameInput.value = '';
     leaguePromotionInput.value = 0;
     leagueRelegationInput.value = 0;
